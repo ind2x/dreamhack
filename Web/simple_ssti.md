@@ -50,19 +50,26 @@ jinja template
 config를 이용하면 된다.
 : <a href="https://flask.palletsprojects.com/en/2.1.x/config/" target="_blank">flask.palletsprojects.com/en/2.1.x/config/</a>
 
+Flask의 속성으로 config가 있고 (dictionary 이다.), config의 키 값 중 ```secret_key```가 들어 있다.
+
 <br>
 
+```{{ config }}```
+
 ![image](https://user-images.githubusercontent.com/52172169/169646050-b3214099-3ed0-41f6-8955-23442d93b592.png)
-
-<br><br>
-
-Flask의 속성으로 config가 있고, config의 속성으로 secret_key 메소드가 들어 있다.
 
 <br>
 
 jinja variable
-<a href="https://jinja.palletsprojects.com/en/3.0.x/templates/#variables" target="_blank">jinja.palletsprojects.com/en/3.0.x/templates/#variables</a>
+: <a href="https://jinja.palletsprojects.com/en/3.0.x/templates/#variables" target="_blank">jinja.palletsprojects.com/en/3.0.x/templates/#variables</a>
+
+<br>
+
+```config.__getitem__('SECRET_KEY')``` 또는 ```config['SECRET_KEY']```
+
+<br><br>
 
 ## Solution 2
 ---
+
 
