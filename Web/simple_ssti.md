@@ -72,4 +72,9 @@ jinja variable
 ## Solution 2
 ---
 
+flag.txt 파일 내용을 보는 방법이 있을 것이다.
+
+jinja2, flask API
+: <a href="https://flask.palletsprojects.com/en/2.1.x/api/" target="_blank">flask.palletsprojects.com/en/2.1.x/api/</a>
+: <a href="https://jinja.palletsprojects.com/en/3.0.x/api/" target="_blank">jinja.palletsprojects.com/en/3.0.x/api/</a>
 
