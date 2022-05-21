@@ -36,7 +36,8 @@ app.run(host='0.0.0.0', port=8000)
 ## Solution 1
 ---
 
-jinja
+flask, jinja
+: <a href="https://flask.palletsprojects.com/en/2.1.x/" target="_blank">flask.palletsprojects.com/en/2.1.x/</a>
 : <a href="https://jinja.palletsprojects.com/en/3.0.x/" target="_blank">jinja.palletsprojects.com/en/3.0.x/</a>
 : <a href="https://tedboy.github.io/jinja2/index.html" target="_blank">tedboy.github.io/jinja2/index.html</a>
 
