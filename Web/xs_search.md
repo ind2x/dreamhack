@@ -1,10 +1,3 @@
----
-title : Dreamhack - XS Search (Incomplete)
-date: 2022-04-26 22:40 +0900
-categories: [Dreamhack, Webhacking]
-tags: [XS Search, Cross Site Search, Incomplete]
----
-
 ## XS - Search
 <hr style="border-top: 1px solid;"><br>
 
