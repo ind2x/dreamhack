@@ -1,10 +1,3 @@
----
-title : Dreamhack - CSS Injection
-categories: [Dreamhack, Webhacking]
-date: 2022-04-23 12:16 +0900
-tags: [css injection]
----
-
 ## CSS Injection
 <hr style="border-top: 1px solid;"><br>
 
