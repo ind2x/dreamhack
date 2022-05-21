@@ -1,10 +1,3 @@
----
-title : Dreamhack - XSS 2
-categories: [Dreamhack, Webhacking]
-tags: [XSS, dreamhack xss2, dreamhack]
-date: 2022-03-06 13:40 +0900
----
-
 ## XSS - 2
 <hr style="border-top: 1px solid;"><br>
 
