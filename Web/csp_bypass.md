@@ -1,10 +1,3 @@
----
-title : Dreamhack - CSP Bypass
-categories: [Dreamhack, Webhacking]
-date: 2022-04-20 19:13 +0900
-tags: [dreamhack csp bypass, csp, csp bypass, script src]
----
-
 ## CSP Bypass
 <hr style="border-top: 1px solid;"><br>
 
