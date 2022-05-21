@@ -1,10 +1,3 @@
----
-title : Dreamhack - DOM XSS
-date: 2022-05-01 10:59 +0900
-categories: [Dreamhack, Webhacking]
-tags: [DOM XSS, dreamhack dom xss, DOM Clobbering]
----
-
 ## DOM XSS
 <hr style="border-top: 1px solid;"><br>
 
