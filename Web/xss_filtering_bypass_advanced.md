@@ -1,10 +1,3 @@
----
-title: Dreamhack - XSS Filtering Bypass Advanced
-date: 2022-04-13 22:30 +0900
-categories: [Dreamhack, Webhacking]
-tags: [dreamhack xss filtering bypass, xss, xss filtering bypass,URI normalization]
----
-
 ## XSS Filtering Bypass Advanced
 <hr style="border-top: 1px solid;"><br>
 
