@@ -1,10 +1,3 @@
----
-title : Dreamhack - phpMyRedis
-date: 2022-04-08 22:11 +0900
-categories: [Dreamhack, Webhacking]
-tags: [redis, dreamhack, dreamhack phpmyredis, wargame]
----
-
 ## phpMyRedis
 <hr style="border-top: 1px solid;"><br>
 
