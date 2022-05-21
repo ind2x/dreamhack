@@ -1,10 +1,3 @@
----
-title: Dreamhack - XSS Filtering Bypass
-date: 2022-04-12 22:30 +0900
-categories: [Dreamhack, Webhacking]
-tags: [dreamhack xss filtering bypass, xss, xss filtering bypass]
----
-
 ## XSS Filtering Bypass
 <hr style="border-top: 1px solid;"><br>
 
