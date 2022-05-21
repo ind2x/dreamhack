@@ -1,10 +1,3 @@
----
-title : "Dreamhack - counting query (wargame.kr, 풀이 봄)"
-date: 2022-03-31 20:06 +0900
-categories: [Dreamhack, Webhacking]
-tags: [Error Based SQL Injection, wargame.kr]
----
-
 ## counting query
 <hr style="border-top: 1px solid;"><br>
 
@@ -89,7 +82,7 @@ tags: [Error Based SQL Injection, wargame.kr]
 <hr style="border: 2px solid;">
 <br><br>
 
-## Solution
+## Solution (풀이 봄)
 <hr style="border-top: 1px solid;"><br>
 
 ```if(false === $result=mysql_query("select * from t_user where user_id='$id' and ps='$ps' and type=$type")) { err("DB Error :: ".mysql_error()); }``` 
