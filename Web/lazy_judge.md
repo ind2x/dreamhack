@@ -1,10 +1,3 @@
----
-title: Dreamhack - Lazy Judge (wargame.kr) (Incomplete)
-date: 2022-05-05 17:36 +0900
-categories: [Dreamhack, Webhacking]
-tags: [wargame.kr, dreamhack, Incomplete]
----
-
 ## Lazy Judge
 <hr style="border-top: 1px solid;"><br>
 
