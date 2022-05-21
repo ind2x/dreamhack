@@ -1,10 +1,3 @@
----
-title : Dreamhack - CSRF Advanced
-date: 2022-04-21 22:41 +0900
-categories: [Dreamhack, Webhacking]
-tags: [CSRF, dreamhack csrf advanced]
----
-
 ## CSRF Advanced
 <hr style="border-top: 1px solid;"><br>
 
