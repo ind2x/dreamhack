@@ -1,11 +1,3 @@
----
-title : Dreamhack - CSRF 2
-categories: [Dreamhack, Webhacking]
-tags: [CSRF, dreamhack csrf2, dreamhack]
-date: 2022-03-06 14:00 +0900
----
-
-
 ## CSRF - 2
 <hr style="border-top: 1px solid;"><br>
 
