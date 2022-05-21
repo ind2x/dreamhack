@@ -411,8 +411,3 @@ return 0;
 }
 ```
 
-
-
-<br><br>
-<hr style="border: 2px solid;">
-<br><br>
