@@ -313,9 +313,6 @@ return 0;
 
 그러면 이제 flag를 어떻게 출력해야 하는가...........
 
-```os.system('su nobody -s /bin/sh -c "cd %s;gcc main.c -o main >/dev/null 2>/dev/null;"' % session['udir'])```
-: id는 nobody
-
 현재 경로는 ```/lazy_judge```이다.
 
 ```
@@ -341,6 +338,8 @@ session['uid'] = uid
 session['udir'] = udir
 
 /reg
+uid [user_dir, templates, static] 불가, 숫자와 영어여야 함, 7~9글자
+
 udir = tempfile.mkdtemp()  ---> /tmp/tmpasdf, chmod777   ---> 모두 접근 가능
 main_file = /tmp/tmpsafb/main.c      ---> 모두 접근 가능
 main_file < #include ~~~~    
@@ -351,19 +350,20 @@ user_file <- pw|udir\n   	---> 루트 권한
 main_file = /tmp/tmpsafb/main.c      ---> 모두 접근 가능
 main_data = main_file.read()
 
-su nobody -s /bin/sh -c "cd /tmp/asdfjwe; gcc -o main main.c  
----> main은 nobody 권한, main.c는 루트 권한
+su nobody -s /bin/sh -c "cd /tmp/tmpasdfj; gcc -o main main.c  
+---> main은 nobody 권한  --> 나머지는 쓰기 권한 없음, main.c는 루트 권한
 submission 함수 실행
 
 testcase 실행
 --> su nobody -s /bin/sh -c timeout 30s /tmp/tmpasdfj/main < /tmp/input_1 > /dev/null
---> main 실행파일은 nobody 권한!!!!!!
+--> main 실행파일은 nobody 권한!!!!!!  --> nobody만 rwx 있고 나머지는 쓰기 권한 없음
 
 solve_file = /tmp/tmpsafj/main.c        ----> 모두 접근 가능
 save_file = /tmp/tmpsafj/324i0fsafj123   ---> 모두 접근 가능
 
-noname is user_dir, templates, static, 숫자와 영어여야 함, 7~9글자
+user_file에 Solve !!!~~ 저장.
 
+/flag 는 권한이 없어서 못읽음 ? 
 ```
 
 <br>
