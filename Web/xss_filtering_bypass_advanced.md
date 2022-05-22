@@ -53,7 +53,7 @@ flag 페이지에서 입력할 때 아래 payload 그대로 넣어야 동작한�
 다른 풀이로는 ```data:[<mediatype>][;base64],<data>```를 이용해서 풀 수도 있다.
 : <a href="https://developer.mozilla.org/ko/docs/Web/HTTP/Basics_of_HTTP/Data_URIs" target="_blank">developer.mozilla.org/ko/docs/Web/HTTP/Basics_of_HTTP/Data_URIs</a>
 
-```<svg>``` 태그와 ``<use>``` 태그를 이용해서 ```<use>```의 ```href``` 속성에서 data URI를 이용해 푼 풀이가 있었다.
+```<svg>``` 태그와 ```<use>``` 태그를 이용해서 ```<use>```의 ```href``` 속성에서 data URI를 이용해 푼 풀이가 있었다.
 
 또한 자바스크립트의 ```fetch``` 함수를 이용해서 원격 API를 호출해서 풀 수도 있다.
 
