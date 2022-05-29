@@ -74,7 +74,7 @@ app.run(host='0.0.0.0', port=8000)
 
 첫 번째 조건은 remote address가 localhost여야 한다.
 
-이 부분은 문제에서 socket 페이지를 통해 해결할 수 있다. ```host: 127.0.0.1, port=8000````
+이 부분은 문제에서 socket 페이지를 통해 해결할 수 있다. ```host: 127.0.0.1, port=8000```
 
 두 번쨰 조건 부터는 header를 추가해줘야 한다. 이 또한 socket 페이지의 data 값으로 header를 추가하면 된다.
 
