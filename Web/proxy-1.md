@@ -78,6 +78,8 @@ app.run(host='0.0.0.0', port=8000)
 
 두 번쨰 조건 부터는 header를 추가해줘야 한다. 이 또한 socket 페이지의 data 값으로 header를 추가하면 된다.
 
+**헤맸던 점은 ```Content-Length``` 헤더를 추가해줘야 Request Body 값이 들어간다는 점이었다.**
+
 ```
 POST /admin HTTP/1.1
 Content-Length: 12
