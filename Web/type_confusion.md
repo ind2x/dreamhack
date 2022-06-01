@@ -85,3 +85,20 @@ function submit(key){
 ## Soluiton
 ---
 
+php의 loose comparison 취약점과 type confusion 취약점이다. 
+
+단순히 ==로 비교를 할 때, php에서는 자동으로 형변환을 한다.
+
+예를 들면, string 12와 integer 12를 비교할 때, 자동으로 string을 integer로 형변환하여 비교를 하게 되어 True가 된다.
+
+이를 이용해서 문제에선 sha1 해쉬 키가 있는데 우리가 입력한 값과 비교를 하여 맞으면 flag를 출력한다.
+
+<br>
+
+하지만 문제에서 입력한 값을 json으로 변환해서 보내주는데, 이러면 값들이 전부 string으로 넘어갈 것이다.
+
+따라서 burp suite로 직접 json 코드를 보내줘야 한다.
+
+<br>
+
+```{"key":0}```을 보내주면 해시 값이 0으로 시작하거나 알파벳으로 시작하면 true가 되어 flag가 출력된다.
