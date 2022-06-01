@@ -22,7 +22,7 @@
 
  function gen_key(){
      $key = uniqid("welcome to wargame.kr!_", true);
-    $key = sha1($key);
+     $key = sha1($key);
      return $key;
  }
 ?>
