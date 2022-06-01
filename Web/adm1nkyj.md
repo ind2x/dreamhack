@@ -1,4 +1,4 @@
-## [wargame.kr] adm1nkyj
+## [wargame.kr] adm1nkyj (풀이 봄)
 ---
 
 ```php
@@ -76,4 +76,34 @@
 
 ## Solution
 ---
+
+핵심은 pw, flag 컬럼명을 알아내는 것이다. 
+
+처음엔 sys schema로 시도했으나 version을 확인해보니 mariadb 5.5.64 버전이다. 
+
+이 버전에는 sys schema가 없는 듯하다. (값이 출력되지 않는다.)
+
+그래서 mysql 스키마로도 해봤으나 어떤 테이블에서도 값이 출력되지 않았다..
+
+해서 풀이를 조금 보았다..
+
+<br>
+
+pw 컬럼명을 알아내는 건 굉장히 간단했다. **(이걸 왜 생각 못했는지 반성해라..)**
+
+우선 나는 union을 통해 ```union select 1,2,3,4,5```을 해서 컬럼이 5개이며 2번째 값이 id 컬럼임을 확인했다.
+
+<br>
+
+```SELECT * FROM findflag_2 WHERE $id_column='{$id}' and $pw_column='{$pw}'```
+
+위의 쿼리에서 id, pw 컬럼이 php 변수로 되어 있어 알 수가 없다. 
+
+하지만 만약 쿼리가 ```SELECT * FROM findflag_2 WHERE $id_column='' union select 1,' and $pw_column=',3,4,5 #'```이 된다면 ```and $pw_column=```이 출력이 될 것이다.
+: 이 값은 pw 컬럼명을 담고 있다. 
+
+출력 결과 pw 컬럼명은 ```xPw4coaa1sslfe``` 이다.
+
+<br>
+
 
