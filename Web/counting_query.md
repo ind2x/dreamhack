@@ -1,4 +1,4 @@
-## counting query
+## counting query (풀이 봄)
 <hr style="border-top: 1px solid;"><br>
 
 ```php
