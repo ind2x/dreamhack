@@ -46,27 +46,30 @@ linux, unix password 저장 형식이다.
 
 일일이 다 brute force 하기에는 힘들어서 풀이를 찾다가.. 그냥 하려했으면 시간낭비 할 뻔 했다는 생각이 들었음.
 
-<br><br>
+<br>
 
-풀이
-: <a href="https://blog.naver.com/is_king/221843606396" target="_blank">blog.naver.com/is_king/221843606396</a>
++ 풀이
+    + <a href="https://blog.naver.com/is_king/221843606396" target="_blank">blog.naver.com/is_king/221843606396</a>
 
 <br>
 
-passlib(md5_crypt) 
-: <a href="https://passlib.readthedocs.io/en/stable/lib/passlib.hash.md5_crypt.html" target="_blank">passlib.readthedocs.io/en/stable/lib/passlib.hash.md5_crypt.html</a>
-: <a href="https://ind2x.github.io/posts/ctf_pymodule/#passlibhash" target="_blank">ind2x.github.io/posts/ctf_pymodule/#passlibhash</a>
++ passlib(md5_crypt) 
+    
+    + <a href="https://passlib.readthedocs.io/en/stable/lib/passlib.hash.md5_crypt.html" target="_blank">passlib.readthedocs.io/en/stable/lib/passlib.hash.md5_crypt.html</a>
+
+    + <a href="https://ind2x.github.io/posts/ctf_pymodule/#passlibhash" target="_blank">ind2x.github.io/posts/ctf_pymodule/#passlibhash</a>
 
 <br>
 
-itertools 
-: <a href="https://docs.python.org/ko/3/library/itertools.html" target="_blank">docs.python.org/ko/3/library/itertools.html</a>
-: <a href="https://ind2x.github.io/posts/python_standard_libraries/#itertools" target="_blank">ind2x.github.io/posts/python_standard_libraries/#itertools</a>
++ itertools 
+
+    + <a href="https://docs.python.org/ko/3/library/itertools.html" target="_blank">docs.python.org/ko/3/library/itertools.html</a>
+
+    + <a href="https://ind2x.github.io/posts/python_standard_libraries/#itertools" target="_blank">ind2x.github.io/posts/python_standard_libraries/#itertools</a>
 
 <br>
 
-일반적인 md5 해쉬 알고리즘과 Linux/Unix에서 사용하는 md5 알고리즘이 다르다는 것. 
-: Linux는 ```md5_crypt(crypt-md5)```
+일반적인 md5 해쉬 알고리즘과 Linux/Unix에서 사용하는 md5 알고리즘이 다르다는 것. (Linux는 ```md5_crypt(crypt-md5)```)
 
 위의 풀이에서 md5 해쉬와 md5_crypt 해쉬의 차이점을 보여줌.
 
@@ -79,8 +82,8 @@ from passlib.hash import md5_crypt
 
 text=string.ascii_lowercase+string.digits
 password='G4HeulB'
-salt='tKmdMk4o'
-hash_value='f2ag61EKYysxJYgI5ckvj0'
+salt='8niXdNmk'
+hash_value='FIgCwEQ8kWh8FuwuR2d4z0'
 fail=1
 
 for len in range(1,20) :
