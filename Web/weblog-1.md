@@ -7,7 +7,7 @@
 
 <br><br>
 
-### Question 1
+### Level 0
 ---
 
 ```
@@ -77,7 +77,7 @@ database 명은 simple_board임을 config.php에서 확인할 수 있다.
 
 <br><br>
 
-### Question 2
+### Level 1
 ---
 
 ```
@@ -103,7 +103,7 @@ Q: 공격자가 config.php 코드를 추출하는데 사용한 페이로드를 �
 
 <br><br>
 
-### Question 3
+### Level 2
 ---
 
 ```
@@ -129,13 +129,13 @@ Q: LFI 취약점을 통해 코드 실행 공격에 사용된 파일의 전체 �
 
 <br>
 
-```/admin/memo.php```에 가보면 memo라른 세션의 값을 memo 매개변수를 통해 입력받는다. 
+```/admin/memo.php```에 가보면 memo라는 세션의 값을 memo 매개변수를 통해 입력받는다. 
 
 따라서 답은 ```/var/lib/php/sessions/sess_ag4l8a5tbv8bkgqe9b9ull5732```
 
 <br><br>
 
-### Question 4
+### Level 3
 ---
 
 ```
@@ -145,3 +145,40 @@ Q: 생성된 웹쉘의 경로를 입력해주세요. (파일 이름을 포함한
 
 <br>
 
+Level 2에서 본 로그를 보면 php 코드가 있다.
+
+php 코드를 보면 K 변수에 date 함수가 사용되었다.
+
+K 변수에 해당 로그의 날짜인 ```2020-06-02```를 넣어서 코드를 실행시켜주면 에러가 뜨는데 에러 중에 아래와 같은 내용이 있다.
+
+<br>
+
+```
+File(/var/www/html/uploads/images.php) is not within the allowed path(s)
+```
+
+<br>
+
+따라서 답은 ```/var/www/html/uploads/images.php```이다.
+
+<br><br>
+
+### Level 4
+---
+
+```
+Q: 생성된 웹쉘을 통해 가장 처음으로 실행된 명령어를 입력해주세요.
+문제 파일은 문제 지문에서 확인할 수 있습니다.
+```
+
+<br>
+
+```
+172.17.0.1 - - [02/Jun/2020:09:56:32 +0000] "GET /uploads/images.php?c=whoami HTTP/1.1" 404 490 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
+```
+
+<br>
+
+로그를 보면 ```whoami```라고 써져있다.
+
+따라서 답은 ```whoami```이다.
