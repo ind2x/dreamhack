@@ -31,7 +31,7 @@ app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT");
   res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
-});
+}); 
 
 // router
 var router = require(__dirname + '/routes')(app, Board);
