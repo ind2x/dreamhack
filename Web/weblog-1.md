@@ -23,6 +23,12 @@ Q: 공격자에게 탈취된 admin 계정의 PW를 입력해주세요.
 
 그런데 sort 매개변수는 값을 그대로 받아들이기 때문에 공격자는 여기서 database명을 뽑아내려고 시도한다.
 
+공격자는 if문을 통해 query가 true이면 문법 에러를 일으켜서 확인한다. 
+
+500 에러가 일어남을 확인할 수 있다.
+
+<br>
+
 아래의 로그는 database 명의 첫 글자인 s를 알아낸 로그 기록이다. 
 
 database 명은 simple_board임을 config.php에서 확인할 수 있다.
@@ -47,10 +53,13 @@ database 명은 simple_board임을 config.php에서 확인할 수 있다.
 
 <br>
 
+테이블명의 첫 글자는 b이다.
 
+다른 코드를 보면은 테이블명이 board, 컬럼 이름이 idx, title, contents, writer가 있음을 알 수 있다.
 
+공격자가 뽑아낸 테이블, 컬럼명은 아래와 같다.
 
-
+```board:idx,board:title,board:contents,board:writer,users:idx,users:username,users:password,users:level```
 
 
 
