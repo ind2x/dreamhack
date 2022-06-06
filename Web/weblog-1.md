@@ -73,8 +73,12 @@ database 명은 simple_board임을 config.php에서 확인할 수 있다.
 
 <br>
 
-여기서 성공한 로그(500 에러가 난 로그)를 살펴보면 admin의 비밀번호는 Th1s_1s_Admin_P@SS
+여기서 성공한 로그(500 에러가 난 로그)를 살펴보면 admin의 비밀번호는 Th1s_1s_Adm1n_P@SS
 
+<br><br>
+
+## Question 2
+---
 
 
 
