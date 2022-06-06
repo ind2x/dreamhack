@@ -61,6 +61,18 @@ database 명은 simple_board임을 config.php에서 확인할 수 있다.
 
 ```board:idx,board:title,board:contents,board:writer,users:idx,users:username,users:password,users:level```
 
+<br>
+
+다음은 ```[02/Jun/2020:09:50:05 +0000]``` 이 시간에 기록된 로그부터는 users 테이블의 값들을 추출하는 로그가 기록되어 있다.
+
+<br>
+
+```
+172.17.0.1 - - [02/Jun/2020:09:50:05 +0000] "GET /board.php?sort=if(ord(substr((select%20group_concat(username,0x3a,password)%20from%20users),%201,1))=32,%20(select%201%20union%20select%202),%200) HTTP/1.1" 200 841
+```
+
+<br>
+
 
 
 
