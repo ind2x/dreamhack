@@ -173,3 +173,15 @@ def encoder(password):
 ## Solution
 ---
 
+우선 로그인을 해야 한다. 그래야 다음으로 넘어갈 수 있다.
+
+문제를 보면 로그인을 할 때, ```encoder(password)```가 되어 있는데 encoder 함수는 보면은 md5로 해시화 한 후 digest 메소드로 raw byte로 변환한다.
+
+딱 보면 몇 번 봤던 ```md5 raw input sql injection``` 부분이다. 
+
+값을 ```129581926211651571912466741651878684928```로 입력해주면 통과가 된다.
+
+Link : <a href="https://zzzmilky.tistory.com/entry/워게임SQL-injection-MD5-raw" target="_blank">zzzmilky.tistory.com/entry/워게임SQL-injection-MD5-raw</a>
+
+<br>
+
