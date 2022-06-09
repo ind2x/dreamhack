@@ -173,6 +173,9 @@ def encoder(password):
 ## Solution
 ---
 
+### /admin
+---
+
 우선 로그인을 해야 한다. 그래야 다음으로 넘어갈 수 있다.
 
 문제를 보면 로그인을 할 때, ```encoder(password)```가 되어 있는데 encoder 함수는 보면은 md5로 해시화 한 후 digest 메소드로 raw byte로 변환한다.
@@ -183,5 +186,38 @@ def encoder(password):
 
 Link : <a href="https://zzzmilky.tistory.com/entry/워게임SQL-injection-MD5-raw" target="_blank">zzzmilky.tistory.com/entry/워게임SQL-injection-MD5-raw</a>
 
+<br><br>
+
+### /admin/singup
+---
+
+admin으로 로그인이 되었으면 플래그를 봐야되는데 플래그 게시글을 수정하려고 하면 거부된다.
+
+문제를 보면 ```super_admin```만 된다고 한다.
+
+따라서 새로 등록을 해줘야 하는데 알아둬야 하는 점은 **우리는 admin으로만 로그인이 된다는 점**이다!!!!!
+
 <br>
 
+코드를 보면 ```SELECT admin_name FROM adminTBL WHERE admin_name='{getSessionData(request.cookies.get('session', ''))}'```가 있는데, 이 코드는 무시해도 된다.
+
+왜냐하면 어차피 admin_name이 admin인 쿼리를 가져오는건데 아직 없기 때문에 pass가 된다.
+
+그 다음 코드인 ```INSERT INTO adminTBL (admin_name, admin_group, secret_key) VALUES ('{admin_name}', 'admin', '{os.urandom(16).hex()}')```에서 공격을 해야 한다.
+
+다행히 출제자가 ```sql_filter``` 함수를 필터링을 약하게 해둬서 그런지 바로 통과했다.
+
+**우리는 admin으로 밖에 로그인하지 못하므로** admin의 admin_group과 secret_key를 조작해줘야 한다.
+
+```admin', 'super_admin', '1') -- x```처럼 입력해주면 된다.
+
+<br><br>
+
+### /admin/auth
+---
+
+생성해줬으면 ```/admin/auth```로 가서 ```secret_key``` 값을 입력해주면 되는데 우리는 admin의 ```secret_key``` 값을 1로 설정해줬으므로 1을 입력해주면 된다.
+
+<br><br>
+
+### /fix_comments
