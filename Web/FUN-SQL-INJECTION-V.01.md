@@ -171,7 +171,8 @@ def encoder(password):
 <br><br>
 
 ## Solution
----
+
+<br>
 
 ### /admin
 ---
@@ -201,13 +202,15 @@ admin으로 로그인이 되었으면 플래그를 봐야되는데 플래그 게
 
 코드를 보면 ```SELECT admin_name FROM adminTBL WHERE admin_name='{getSessionData(request.cookies.get('session', ''))}'```가 있는데, 이 코드는 무시해도 된다.
 
-왜냐하면 어차피 admin_name이 admin인 쿼리를 가져오는건데 아직 없기 때문에 pass가 된다.
+왜냐하면 어차피 ```admin_name```이 admin인 쿼리를 가져오는건데 아직 없기 때문에 pass가 된다.
 
 그 다음 코드인 ```INSERT INTO adminTBL (admin_name, admin_group, secret_key) VALUES ('{admin_name}', 'admin', '{os.urandom(16).hex()}')```에서 공격을 해야 한다.
 
 다행히 출제자가 ```sql_filter``` 함수를 필터링을 약하게 해둬서 그런지 바로 통과했다.
 
-**우리는 admin으로 밖에 로그인하지 못하므로** admin의 admin_group과 secret_key를 조작해줘야 한다.
+<br>
+
+**우리는 admin으로 밖에 로그인하지 못하므로** admin의 ```admin_group```과 ```secret_key```를 조작해줘야 한다.
 
 ```admin', 'super_admin', '1') -- x```처럼 입력해주면 된다.
 
@@ -221,3 +224,5 @@ admin으로 로그인이 되었으면 플래그를 봐야되는데 플래그 게
 <br><br>
 
 ### /fix_comments
+---
+
