@@ -214,6 +214,8 @@ admin으로 로그인이 되었으면 플래그를 봐야되는데 플래그 게
 
 ```admin', 'super_admin', '1') -- x```처럼 입력해주면 된다.
 
+**이제 admin은 super_admin이 되었다..!!!**
+
 <br><br>
 
 ### /admin/auth
@@ -223,6 +225,6 @@ admin으로 로그인이 되었으면 플래그를 봐야되는데 플래그 게
 
 <br><br>
 
-### /fix_comments
+### /fix_comment
 ---
 
