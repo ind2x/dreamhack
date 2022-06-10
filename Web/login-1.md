@@ -147,11 +147,12 @@ def admin():
     return "Only Admin !"
 
 app.run(host='0.0.0.0', port=8000)
-
 ```
 
 <br><br>
 
 ## Solution
 ---
+
+admin 페이지에 접속을 해야 플래그를 얻을 수 있다.
 
