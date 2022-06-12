@@ -187,3 +187,4 @@ for i in range(1,100):
 		break
 ```
 
+다른 방법으로는 race condition 공격으로 ```1. 1초동안 sleep 하는 동안에 5회 이상 submit을 해주면 resetCount 값이 증가되서 Left Count 값이 음수가 되어서 비교 구문을 우회하는 방법```과 ```2. thread를 이용해 time.sleep(1) 코드가 실행되는 동안 1~99까지의 backupCode 값을 입력하는 방법```이 있다.
