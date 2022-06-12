@@ -1,6 +1,8 @@
 ## file-csp-1
 ---
 
+app.py
+
 ```python
 #!/usr/bin/env python3
 import os
@@ -79,9 +81,57 @@ if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8000, threaded=True)
 ```
 
+<br>
+
+csp.html
+
+```html
+<!doctype html>
+<html>
+	<head>
+	<!-- block me -->
+	<script>
+		function a() { return 'a'; }
+		document.write('a: block me!<br>');
+	</script>
+	<!-- block me -->
+	 <script nonce="i_am_super_random">
+		function b() { return 'b'; }
+		document.write('b: block me!<br>');
+	</script>
+	<!-- allow me -->
+	<script
+  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+  crossorigin="anonymous"></script>
+	<!-- allow me -->
+	 <script nonce="i_am_super_random">
+		function c() { return 'c'; }
+		document.write('c: allow me!<br>');
+		try { $(document); document.write('jquery: allow me!<br>'); } catch (e) {  }
+	</script>
+	</head>
+</html>
+
+```
+
 <br><br>
 
 ## Solution
 ---
 
+처음 시도는 ```script-src 'unsafe-inline' https://code.jquery.com/jquery-3.4.1.slim.min.js 'nonce-i_am_super_random'```으로 시도했다.
 
+```unsafe-inline``` 부분은 nonce가 들어가면 필요 없다고 콘솔창에 나타나서 제거한 후 보내니 b,c,jquery가 통과됬다.
+
+<br>
+
+b를 제거하는 방법을 찾아야 하는데 콘솔창을 보면 에러가 하나 띄워지는데 거기에 hash 값이 나와있다.
+
+그래서 계속해서 바꿔가면서 hash 값을 추가해주고 빼주고 하면 b가 없어지고 c와 jquery만 허용하는 단계에 이르게 되었다.
+
+최종 페이로드는 아래와 같다.
+
+<br>
+
+```script-src 'sha256-l1OSKODPRVBa1/91J7WfPisrJ6WCxCRnKFzXaOkpsY4=' https://code.jquery.com/jquery-3.4.1.slim.min.js```
