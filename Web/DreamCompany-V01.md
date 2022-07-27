@@ -31,7 +31,7 @@ manager에 숫자 영문자 등이 붙고 req.path에 admin이 없으면 됨
 
 이 함수에서는 id가 ```manager[0-9]*```이어야 함.
 
-따라서 id가 ```guest[0-9]manager[0-9]\w```이면 됨. -> ```guest1manager1```
+따라서 id가 ```guest[0-9]*manager[0-9]*\w```이면 됨. -> ```guest1manager1```
 
 이걸로 계정을 생성한 뒤 manage 페이지에 접속할 수 있음.
 
