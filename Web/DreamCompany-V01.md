@@ -35,3 +35,13 @@ manager에 숫자 영문자 등이 붙고 req.path에 admin이 없으면 됨
 
 이걸로 계정을 생성한 뒤 manage 페이지에 접속할 수 있음.
 
+---
+
+1	manager	1239asdasd93932WEASDGasdv4234qwegyunbdf4234664
+2	fake	qw9eu8dusf8oyudv8yxze7yr62347789a7we9o7ro837qry78y
+3	admin	8ee7f20905f333c62c3f137cc0d103f281b37086b5160af5b9b99cacb37dbe0f
+
+#	log_name	log_message
+0	admin_add_log	added to admin, time : 1352341 admin password create is 'shs2848divv8ru4uwau3u48sdifjsigjirjgls8bvcawe2' + time
+1	user_log	login to user, time : 144354446
+2	user_add_log	added to user, time : 144344809
