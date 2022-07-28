@@ -15,13 +15,42 @@
 
 <br>
 
-```
-1	manager	1239asdasd93932WEASDGasdv4234qwegyunbdf4234664
-2	fake	qw9eu8dusf8oyudv8yxze7yr62347789a7we9o7ro837qry78y
-3	admin	8ee7f20905f333c62c3f137cc0d103f281b37086b5160af5b9b99cacb37dbe0f
+manage 페이지에 접속하면 admin hash와 admin log에서 시간과 secret key 값을 확인할 수 있다.
 
-#	log_name	log_message
-0	admin_add_log	added to admin, time : 1352341 admin password create is 'shs2848divv8ru4uwau3u48sdifjsigjirjgls8bvcawe2' + time
-1	user_log	login to user, time : 144354446
-2	user_add_log	added to user, time : 144344809
+어드민 비밀번호는 시간 값을 브루트포싱해서 찾을 수 있는데, 여기서 시간은 코드에서 ```getTime()``` 함수의 리턴 값인데 예를 들어, 1초라면 01로 나오는게 아니라 1로 나온다는 것이다.
+
+즉, 12시 14분 1초 100밀리초라면 ```121401100```이 아니라 ```12141100```이라는 것이다.
+
+따라서 이를 토대로 코드를 짜서 비밀번호를 얻는다.
+
+<br>
+
+```python
+import hashlib
+
+cipher = 'shs2848divv8ru4uwau3u48sdifjsigjirjgls8bvcawe214126934'
+admin_hash = '4b3ae304ded8f334e67ebc87a5a41f6b9777da66cf429bc652fb7f925983abff'
+
+hour = '14'
+minute = 12
+seconds = 0
+milliseconds = 0
+
+while (minute != 13):
+    milliseconds += 1
+    if (milliseconds == 1000):
+        milliseconds = 0
+        seconds += 1
+
+    if (seconds == 60):
+        seconds = 0
+        minute += 1
+    time = hour + str(minute) + str(seconds) + str(milliseconds)
+    check = hashlib.sha256((cipher + time).encode()).hexdigest()
+    print("M, s, m : ", minute, seconds, milliseconds)
+    if (check == admin_hash):
+        print("PW : ", cipher + time)
+        break
 ```
+
+<br>
