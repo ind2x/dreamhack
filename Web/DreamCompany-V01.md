@@ -1,27 +1,5 @@
-account_route
-
-filter를 거친 뒤
-
-계정이 있거나 어드민이면 JWT 생성
-
-ADMIN이면 admin_id 키 값으로 id 설정
-
+## DreamCompany-V01
 ---
-manage_route
-
-JWT가 null이면 거부, 아니면 검증을 함
-
-검증 시 에러 또는 결과가 null이면 홈으로 리다이렉트
--> none 알고리즘 공격으로 우회 가능?
--> 확인 결과 버전이 8.5.1로 취약점에 안전한 버전이었음.. 뻘짓한거
-
-checkGroup이 트루면 user_id 값을 result.id값으로 설정 후 next()
-
-checkGroup(req,result.id)에서 result.id가 admin이거나
-manager에 숫자 영문자 등이 붙고 req.path에 admin이 없으면 됨
-
-
-----
 
 세션을 추가하려면 그리고 JWt 토큰을 생성하려면 계정을 만들어야 함.
 
@@ -35,8 +13,9 @@ manager에 숫자 영문자 등이 붙고 req.path에 admin이 없으면 됨
 
 이걸로 계정을 생성한 뒤 manage 페이지에 접속할 수 있음.
 
----
+<br>
 
+```
 1	manager	1239asdasd93932WEASDGasdv4234qwegyunbdf4234664
 2	fake	qw9eu8dusf8oyudv8yxze7yr62347789a7we9o7ro837qry78y
 3	admin	8ee7f20905f333c62c3f137cc0d103f281b37086b5160af5b9b99cacb37dbe0f
@@ -45,3 +24,4 @@ manager에 숫자 영문자 등이 붙고 req.path에 admin이 없으면 됨
 0	admin_add_log	added to admin, time : 1352341 admin password create is 'shs2848divv8ru4uwau3u48sdifjsigjirjgls8bvcawe2' + time
 1	user_log	login to user, time : 144354446
 2	user_add_log	added to user, time : 144344809
+```
