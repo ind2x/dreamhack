@@ -78,4 +78,6 @@ checkToken은 토큰이 있고 id가 admin이면 통과되므로 저 페이지�
 
 그 전에 생각은 토큰만 있으면 admin 페이지에도 접속할 수 있다고 생각했는데 안된 이유가 checkToken의 ```if ((manager === true && !req.path.toLowerCase().includes("admin")) || value === "admin")```이 코드에서 걸린 것이었다.
 
-나중에 풀이를 보니 
+문제에서 언인텐 코드가 추가됬다는데, 풀이를 보니 그 전에는 ```toLowerCase()```가 없어서 토큰을 얻은 뒤 ```/Admin/get/6```로 접속을 할 수 있던 것이였다.
+
+지금은 admin이 아니면 admin 페이지에 아예 들어갈 수 없으므로 브루트포스로 풀어야 되는 것이다.
