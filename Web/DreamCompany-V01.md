@@ -54,3 +54,28 @@ while (minute != 13):
 ```
 
 <br>
+
+비밀번호를 구하고 로그인 한 뒤 admin 페이지에 가보면 super_admin 메시지를 확인해야 함을 알 수 있다.
+
+<br>
+
+```javascript
+router.get("/admin/get/:report_id", checkToken, (req, res) => {
+  const report_id = req.params.report_id;
+  res.json({report: adminReport.getReport(report_id)}).status(200);
+})
+```
+
+<br>
+
+위의 코드를 보면 checkToken을 통과하면 ```/admin/get/6```에 플래그가 있는데 여기를 확인할 수 있다.
+
+checkToken은 토큰이 있고 id가 admin이면 통과되므로 저 페이지를 확인할 수 있는 것이다.
+
+따라서 플래그를 얻을 수 있다.
+
+<br>
+
+그 전에 생각은 토큰만 있으면 admin 페이지에도 접속할 수 있다고 생각했는데 안된 이유가 checkToken의 ```if ((manager === true && !req.path.toLowerCase().includes("admin")) || value === "admin")```이 코드에서 걸린 것이었다.
+
+나중에 풀이를 보니 
