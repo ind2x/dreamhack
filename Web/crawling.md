@@ -14,18 +14,18 @@ app.flag = '__FLAG__'
 
 def lookup(url):
     try:
-        return socket.gethostbyname(url)
+        return socket.gethostbyname(url) # url IP 주소 반환
     except:
         return False
 
 def check_global(ip):
     try:
-        return (ipaddress.ip_address(ip)).is_global
+        return (ipaddress.ip_address(ip)).is_global # IP주소가 공인 호스트라면 true 반환
     except:
         return False
 
 def check_get(url):
-    ip = lookup(urlparse(url).netloc)
+    ip = lookup(urlparse(url).netloc) #  host:port 값을 인자로 넣어서 IP주소 반환
     if ip == False or ip =='0.0.0.0':
         return "Not a valid URL."
     res=requests.get(url)
