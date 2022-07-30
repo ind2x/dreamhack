@@ -67,6 +67,7 @@ CMD ["app.py"]
 
 요약하면 ```/console``` 페이지에 접속하면 파이썬 인터프리터를 사용 가능하며, 보안을 위해 PIN 기능을 설정할 수 있는데, 문제에서는 설정이 되어 있고 이 PIN 번호를 알아내야 플래그를 실행 할 수 있는 것이였다.
 
+이 핀 번호는 생성하는 알고리즘이 있는데, 이 알고리즘 코드는 ```/usr/local/lib/python3.8/site-packages/werkzeug/debug/__init__.py```에 있다.
 
 
 <br><br>
