@@ -28,7 +28,7 @@ def check_get(url):
     ip = lookup(urlparse(url).netloc) #  host:port 값을 인자로 넣어서 IP주소 반환
     if ip == False or ip =='0.0.0.0':
         return "Not a valid URL."
-    res=requests.get(url)
+    res=requests.get(url) 
     if check_global(ip) == False:
         return "Can you access my admin page~?"
     for i in res.text.split('>'):
