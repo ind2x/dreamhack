@@ -211,6 +211,7 @@ while (1):
 
 time.sleep(44.2) 
 # 쿠폰이 만료될 시점을 고려해서 키는 없어졌지만 아직 쿠폰 만료 시간과 int(time) 값이 동일할 때 보내야 함
+# 안되면 조금씩 내림조정해서 설정
 res = requests.get(url, headers=headers)
 print(res.text)
 ```
