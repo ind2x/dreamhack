@@ -91,5 +91,8 @@ if __name__ == '__main__':
 ## Solution
 ---
 
+select를 어떻게 우회할까 생각하다가 질문에서 강의를 보면 된다고 해서 보니까 sqlite에서 select 필터링 됬을 때 우회 방법을 설명해주었다.
 
+바로 ```union value(value)```를 이용하는 것이다.
 
+따라서 ```level=0 union values(char(0x61)||char(0x64)||CHAR(0x6D)||CHAR(0x69)||CHAR(0x6E))```
