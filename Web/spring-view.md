@@ -172,7 +172,16 @@ public class WebConfig extends WebMvcConfigurerAdapter
 ## Solution
 ---
 
+Spring View Name Manipulation 취약점인데, 내부 라이브러리에서 발생한 취약점이다. (블로그 확인)
 
+루트 페이지 말고 다른 페이지를 요청할 때 리턴 값으로 ```lang + "/welcome"``` 이런 식으로 lang 변수를 붙여서 리턴하는 것을 볼 수 있다.
 
+템플릿을 렌더링 할 때 거치는 과정에서 취약점이 발생하는데, lang 값은 쿠키 값이므로 쿠키 lang 값에 예를 들어, ```${7*7}```을 설정한 뒤, welcome 페이지에 들어가면 에러가 발생하게 되는데 에러 페이지에 ```${7*7}/welcome```가 있음을 볼 수 있다.
+
+<br>
+
+따라서 다시 쿠키 값을 ```${7*7}::x```로 설정하면 ```49```라 출력될 것이다.
+
+이제 플래그를 찾아야 되는데, 문제에서 ```java, Runtime, class```를 필터링하여 우회해야 한다.
 
 
