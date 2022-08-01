@@ -107,6 +107,8 @@ for len in range(1,20) :
 
 <br>
 
+오래 걸려서 풀진 못했다
+
 <br><br>
 <hr style="border: 2px solid;">
 <br><br>
