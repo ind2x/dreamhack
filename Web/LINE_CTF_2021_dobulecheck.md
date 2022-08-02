@@ -129,9 +129,8 @@ The querystring.unescape() method performs decoding of URL percent-encoded chara
 
 The querystring.unescape() method is used by querystring.parse() and is generally not expected to be used directly. 
 
-It is exported primarily to allow application code to provide a replacement decoding implementation if necessary by assigning querystring.
-
-unescape to an alternative function.
+It is exported primarily to allow application code to provide a replacement decoding implementation 
+if necessary by assigning querystring.unescape to an alternative function.
 
 By default, the querystring.unescape() method will attempt to use the JavaScript built-in decodeURIComponent() method to decode. 
 
@@ -140,4 +139,20 @@ If that fails, a safer equivalent that does not throw on malformed URLs will be 
 
 <br>
 
-정리하면 
+정리하면 일반적으로 직접 사용되지 않고, ```querystring.parse```에서 사용되며 **기본적으로 자바스크립트의 내장 함수인 decodeURIComponent()를 디코딩 시 사용**하며, 실패 시 안전한 형식의 URL을 사용(?) 한다고 한다.
+
+```decodeURIComponent()``` 함수는 이스케이프된 문자열을 각각의 자신을 나타내는 문자로 변환해주는 함수이다.
+
+잘못 사용되면  URIError ( " malformed URI sequence ") 예외를 발생시킨다.
+
+<br>
+
+이제 소스코드를 분석해본다.
+
+Link : <a href="https://github.com/nodejs/node/blob/5011009a593437d3e4ab157d448cc464c93c8cc5/lib/querystring.js" target="_blank">github.com/nodejs/node/blob/5011009a593437d3e4ab157d448cc464c93c8cc5/lib/querystring.js</a>
+
+<br>
+
+
+
+
