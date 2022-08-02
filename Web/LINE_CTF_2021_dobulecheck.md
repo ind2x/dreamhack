@@ -153,6 +153,24 @@ Link : <a href="https://github.com/nodejs/node/blob/5011009a593437d3e4ab157d448c
 
 <br>
 
+먼저 unescape 함수를 보면 설명한 대로 ```decodeURIComponent``` 함수를 리턴하고 예외발생 시 ``` QueryString.unescapeBuffer(s, decodeSpaces).toString()```를 불러온다.
+
+<br>
+
+```javascript
+function qsUnescape(s, decodeSpaces) {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return QueryString.unescapeBuffer(s, decodeSpaces).toString();
+  }
+}
+```
+
+<br>
+
+이제 <a href="https://github.com/nodejs/node/blob/5011009a593437d3e4ab157d448cc464c93c8cc5/lib/querystring.js#L271" target="_blank">parse 코드</a>를 보자.
+
 
 
 
