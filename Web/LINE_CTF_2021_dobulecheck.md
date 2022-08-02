@@ -83,14 +83,61 @@ function validate (str) {
 module.exports = app
 ```
 
-<br>
-
-현재 경로는 ```/usr/src/app```
-
 <br><br>
 
 ## Solution
 ---
 
+플래그를 얻기 위해선 ```/flag```로 요청을 보내야 하는데, p 값에 점과 ```%2e, %2E```가 있으면 validate 함수에 걸려서 403 에러를 발생시킨다.
 
+즉, validate 함수를 우회하는게 핵심이다.
 
+그럼 어떻게 우회를 하는가..
+
+<br>
+
+ㅎㅎ.. 결국 내가 풀지는 못했지만 취약점이라 할 수는 없겠지만, 공식문서를 보고 코드를 분석하고 이해하여 풀 수도 있다는 과정을 배웠다고 생각한다.
+
+<br>
+
+```querystring.parse``` 문서 : <a href="https://nodejs.org/api/querystring.html" target="_blank">nodejs.org/api/querystring.html</a>
+
+문서를 보면 parse 설명의 끝 부분을 보면 다음과 같이 써있다.
+
+<br>
+
+```
+By default, percent-encoded characters within the query string will be assumed to use UTF-8 encoding. 
+
+If an alternative character encoding is used, then an alternative decodeURIComponent option will need to be specified:
+```
+
+<br>
+
+기본적으로 퍼센트인코딩 된 문자는 UTF-8 인코딩을 사용한 것으로 간주하며, 다른 문자 인코딩을 사용한다면 ```decodeURIComponent``` 옵션을 지정해야 한다.
+
+```decodeURIComponent``` 옵션을 보면 기본적으로 ```querystring.unescape()```를 사용한다고 한다.
+
+즉, 퍼센트로 인코딩된 문자를 디코딩할 때, ```querystring.unescape()```를 사용한다고 한다.
+
+```querystring.unescape()```에 대해 보면 아래와 같다.
+
+<br>
+
+```
+The querystring.unescape() method performs decoding of URL percent-encoded characters on the given str.
+
+The querystring.unescape() method is used by querystring.parse() and is generally not expected to be used directly. 
+
+It is exported primarily to allow application code to provide a replacement decoding implementation if necessary by assigning querystring.
+
+unescape to an alternative function.
+
+By default, the querystring.unescape() method will attempt to use the JavaScript built-in decodeURIComponent() method to decode. 
+
+If that fails, a safer equivalent that does not throw on malformed URLs will be used.
+```
+
+<br>
+
+정리하면 
