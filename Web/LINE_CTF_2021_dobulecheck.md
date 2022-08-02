@@ -192,7 +192,48 @@ const customDecode = (decode !== qsUnescape);
 <br>
 
 ```javascript
-if (currentChar === 37 /* '%' */ && index < maxLength) {
+const unhexTable = new Int8Array([
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0 - 15
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 16 - 31
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 32 - 47
+  +0, +1, +2, +3, +4, +5, +6, +7, +8, +9, -1, -1, -1, -1, -1, -1, // 48 - 63
+  -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 64 - 79
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 80 - 95
+  -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 96 - 111
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 112 - 127
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 128 ...
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  // ... 255
+]);
+```
+
+<br>
+
+```javascript
+function unescapeBuffer(s, decodeSpaces) {
+  const out = Buffer.allocUnsafe(s.length);
+  let index = 0;
+  let outIndex = 0;
+  let currentChar;
+  let nextChar;
+  let hexHigh;
+  let hexLow;
+  const maxLength = s.length - 2;
+  // Flag to know if some hex chars have been decoded
+  let hasHex = false;
+  while (index < s.length) {
+    currentChar = StringPrototypeCharCodeAt(s, index);
+    if (currentChar === 43 /* '+' */ && decodeSpaces) {
+      out[outIndex++] = 32; // ' '
+      index++;
+      continue;
+    }
+    if (currentChar === 37 /* '%' */ && index < maxLength) {
       currentChar = StringPrototypeCharCodeAt(s, ++index);
       hexHigh = unhexTable[currentChar];
       if (!(hexHigh >= 0)) {
@@ -212,17 +253,75 @@ if (currentChar === 37 /* '%' */ && index < maxLength) {
     }
     out[outIndex++] = currentChar;
     index++;
+  }
+  return hasHex ? out.slice(0, outIndex) : out;
+}
 ```
 
 <br>
 
-일부분만 가져와서 보면 
+해석하면 우선 unhexTable 변수는 0부터 255까지의 인덱스(아스키코드)가 있는데, ```0~9, A~F, a~f```의 인덱스에는 값으로 각각 자신의 10진수 값을 넣어주었고, 나머지에는 -1로 설정해두었다.
 
+그 다음 중간에 퍼센트 처리에 관한 코드를 보면, 가져온 글자가 ```%```이면 그 다음 문자의 아스키 값을 가져와서 hexHigh 또는 hexLow에 설정한다.
 
+hexHigh 또는 hexLow의 값은 무조건 0~15 사이의 숫자가 된다.
+
+예를 들면, ```%ff```를 본다면 ```%```를 확인한 뒤 그 다음 ```f```를 확인하게 되는데, 이 f는 hexHigh 변수에 f의 10진수 값인 15로 설정이 되고, hexHigh 조건문이 성립이 안되므로 그 다음 hexLow 변수에 마지막 f가 담긴다.
+
+그 다음 hexLow 또한 조건문이 성립이 안되므로 ```currentChar = hexHigh * 16 + hexLow``` 코드가 실행되어 ```%ff```의 10진수 값인 255가 된다.
 
 <br>
 
-이제 생각을 해보면.. ```decodeURIComponent```의 디코딩 범위는 **%00부터 %7F까지**이다.
+이제 생각을 해보면.. ```decodeURIComponent```의 디코딩 범위는 **```%00부터 %7F까지```**이다.
 
+따라서 그 다음 ```%80```부터의 값이 들어가게 되면 위의 unescapeBuffer 함수가 실행이 된다.
 
+여기서 가장 중요한 핵심이 되는 부분이 있다.
 
+unescapeBuffer 코드에서 리턴되는 값은 out 변수인데, out의 변수는 **Buffer 클래스**이다.
+
+<a href="https://nodejs.org/api/buffer.html#buffer" target="_blank">Buffer 클래스를 살펴보자</a>
+
+<br>
+
+```
+The Buffer class is a subclass of JavaScript's Uint8Array class and extends it with methods that cover additional use cases. 
+Node.js APIs accept plain Uint8Arrays wherever Buffers are supported as well.
+```
+
+<br>
+
+기본적으로 **Uint8Array 클래스**를 사용한다고 한다. 즉, **UTF-8**이라는 소리다.
+
+따라서 **0~255까지의 값**만 받을 수 있는데, 그 외의 값이 들어오면 **오버플로우**가 발생한다.
+
+아래의 테스트 코드를 확인해보면 알 수 있다.
+
+<br>
+
+```javascript
+const b = Buffer.allocUnsafe(2)
+b[0]=255
+b[1]=256
+console.log(b[0], b[1]) // 255, 0
+```
+
+<br>
+
+우리는 ```/flag``` 페이지에 들어가야 하므로 ```../```가 필요하다.
+
+```../```는 ```%2e%2e/```이다. 우리는 ```%2e```를 얻어야 한다.
+
+```%2e```는 아스키코드로 46이므로 46을 얻기 위해선 ```x-255 = 46, x=302```이다.
+
+따라서 우리는 유니코드 302 문자인 ```Į```을 이용해서 접근할 수 있게 되었다.
+
+<br>
+
+이제 validate 함수 우회 방법이다.
+
+첫 validate문은 위의 ```Į``` 자체를 넣어줘서 우회할 수 있고, 두 번째 validate문은 위의 parse 메소드 문서를 확인해보면 알겠지만 ```a=1&a=2```가 있다면, ```{a : ['1','2']}```로 변환해준다.
+
+이렇게 되면 두 번째 validate를 우회할 수 있다.
+
+따라서 최종 페이로드는 ```p=good&p=%ff/ĮĮ/ĮĮ/ĮĮ/flag```이다.
