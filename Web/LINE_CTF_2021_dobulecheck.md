@@ -153,7 +153,7 @@ Link : <a href="https://github.com/nodejs/node/blob/5011009a593437d3e4ab157d448c
 
 <br>
 
-먼저 unescape 함수를 보면 설명한 대로 ```decodeURIComponent``` 함수를 리턴하고 예외발생 시 ``` QueryString.unescapeBuffer(s, decodeSpaces).toString()```를 불러온다.
+먼저 unescape 함수를 보면 설명한 대로 ```decodeURIComponent``` 함수를 리턴하고 예외발생 시 ```QueryString.unescapeBuffer(s, decodeSpaces).toString()```를 불러온다.
 
 <br>
 
@@ -171,6 +171,58 @@ function qsUnescape(s, decodeSpaces) {
 
 이제 <a href="https://github.com/nodejs/node/blob/5011009a593437d3e4ab157d448cc464c93c8cc5/lib/querystring.js#L271" target="_blank">parse 코드</a>를 보자.
 
+<br>
+
+```javascript
+let decode = QueryString.unescape;
+if (options && typeof options.decodeURIComponent === 'function') {
+    decode = options.decodeURIComponent;
+}
+const customDecode = (decode !== qsUnescape);
+```
+
+<br>
+
+설명한 대로 기본은 decodeURIComponent이며 다른걸 사용하면 옵션을 설정해야하므로 if문에서 그걸 확인한다.
+
+<br>
+
+어느 정도 파악을 했으니, 이제 unescape 했을 때 예외가 발생했을 때의 <a href="https://github.com/nodejs/node/blob/5011009a593437d3e4ab157d448cc464c93c8cc5/lib/querystring.js#L80" target="_blank">코드</a> (```QueryString.unescapeBuffer(s, decodeSpaces).toString()```)를 보자.
+
+<br>
+
+```javascript
+if (currentChar === 37 /* '%' */ && index < maxLength) {
+      currentChar = StringPrototypeCharCodeAt(s, ++index);
+      hexHigh = unhexTable[currentChar];
+      if (!(hexHigh >= 0)) {
+        out[outIndex++] = 37; // '%'
+        continue;
+      } else {
+        nextChar = StringPrototypeCharCodeAt(s, ++index);
+        hexLow = unhexTable[nextChar];
+        if (!(hexLow >= 0)) {
+          out[outIndex++] = 37; // '%'
+          index--;
+        } else {
+          hasHex = true;
+          currentChar = hexHigh * 16 + hexLow;
+        }
+      }
+    }
+    out[outIndex++] = currentChar;
+    index++;
+```
+
+<br>
+
+일부분만 가져와서 보면 
+
+
+
+<br>
+
+이제 생각을 해보면.. ```decodeURIComponent```의 디코딩 범위는 **%00부터 %7F까지**이다.
 
 
 
