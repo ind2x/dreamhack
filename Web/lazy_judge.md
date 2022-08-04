@@ -347,7 +347,7 @@ user_file <- pw|udir\n   	---> 루트 권한
 
 
 /prob
-main_file = /tmp/tmpsafb/main.c      ---> 모두 접근 가능
+main_file = /tmp/tmpsafb/main.c      ---> 모두 접근 가능  -> /tmp/tmpa3Sp6z
 main_data = main_file.read()
 
 su nobody -s /bin/sh -c "cd /tmp/tmpasdfj; gcc -o main main.c  
@@ -410,4 +410,6 @@ else { return 17920>>8; }
 return 0;
 }
 ```
+
+/tmp/tmpa3Sp6z
 
