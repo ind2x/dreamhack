@@ -351,7 +351,7 @@ main_file = /tmp/tmpsafb/main.c      ---> 모두 접근 가능
 main_data = main_file.read()
 
 su nobody -s /bin/sh -c "cd /tmp/tmpasdfj; gcc -o main main.c  
----> main, main.c은 nobody 권한  --> 나머지는 쓰기 권한 없음
+---> main nobody 권한  --> 나머지는 쓰기 권한 없음
 submission 함수 실행
 
 testcase 실행
