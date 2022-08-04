@@ -293,9 +293,8 @@ def no_func(st):
 ```c
 /*CHECK*/
 #include <stdio.h>
-#include <stdlib.h>
 int main(){
-char a[100], buffer[1000];
+char a[100];
 scanf("%s", a);
 int b = atoi(a);
 if(b == 1) { return 256>>8; }
