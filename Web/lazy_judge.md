@@ -418,3 +418,29 @@ return 0;
 
 단, 변조하려면 secret_key ```(app.secret_key)``` 값을 알아야 한다.
 
+<br>
+
+system 함수 구현해서 시도? --> 실패
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+
+void test(const char* cmd)
+{
+        pid_t pid;
+        pid = fork();
+        execl("/bin/sh","sh","-c",cmd,(char*)0);
+}
+```
+
+<br>
+
+XXE 시도 --> 값에 ```[```를 넣으면 제대로 들어가지 않음;;
+
+```
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" version="1.1" height="200">
+    <image xlink:href="expect://ls"></image> --> error, ./static/realru.jpeg로 하면 나오는데, 서버 내에서 가져오는건 아니라서..
+</svg>
+```
+
