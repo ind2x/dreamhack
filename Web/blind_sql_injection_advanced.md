@@ -76,8 +76,10 @@ FLUSH PRIVILEGES;
 <hr style="border-top: 1px solid;"><br>
 
 upw 길이는 27이라고 생각할 수 있으나 한글 즉, unicode가 껴있기 때문에 확실하지 않다.
-: 비밀번호의 정확한 길이는 char_length 함수를 이용해서 구할 수 있다.
-: CHAR_LENGTH 함수는 문자의 Byte 수를 계산하지 않고 단순히 몇 개의 문자가 있는지를 가져오는 함수
+
+비밀번호의 정확한 길이는 char_length 함수를 이용해서 구할 수 있다.
+
+CHAR_LENGTH 함수는 문자의 Byte 수를 계산하지 않고 단순히 몇 개의 문자가 있는지를 가져오는 함수
 
 <br>
 
