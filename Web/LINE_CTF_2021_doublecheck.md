@@ -327,5 +327,5 @@ console.log(b[0], b[1]) // 255, 0
 따라서 최종 페이로드는 ```p=good&p=%ff/ĮĮ/ĮĮ/ĮĮ/flag```이다.
 
 <br> 
-
+ 
 이것도 읽어 보기 <a href="https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf" target="_blank">blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf</a>
