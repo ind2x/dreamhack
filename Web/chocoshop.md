@@ -30,7 +30,7 @@ PEPERO_PRICE = 1500
 def handle_errors(error):
     return jsonify({'status': 'error', 'message': str(error)}), error.code
 
-
+ 
 for de in default_exceptions:
     app.register_error_handler(code_or_exception=de, f=handle_errors)
 
