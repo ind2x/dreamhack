@@ -27,7 +27,7 @@ except:
 no_func_filter =lambda x:re.findall(r'\(*([^)]+)\)',x)
 def no_func(st):
 	if 'system' in st:
-		return False
+		return False 
 	li = no_func_filter(st)
 	for t in li:
 		t = t.split('(')[0]
