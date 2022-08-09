@@ -483,3 +483,21 @@ ChildProcess도 EventEmitter의 객체여서 각 스트림에 이벤트 리스�
 <br>
 
 이벤트는 <a href="https://opentutorials.org/module/938/7629" target="_blank">opentutorials.org/module/938/7629</a>와 <a href="https://nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/" target="_blank">nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/</a>, <a href="https://nodejs.org/api/stream.html" target="_blank">nodejs.org/api/stream.html</a>
+
+
+<br><br>
+
+## Another Solution
+---
+
+다른 풀이로는 거의 1년전 풀이들 밖에 없긴 했지만, ```req.file.path```에서 file.path를 오염시키는 방법도 있었다.
+
+물론 이제 문제상에서 막아놔서 (outputFunctionName, file, path) 할 수는 없지만 prototype pollution 취약점은 정말 강력하고 위험하다는 생각이 들긴 했다.
+
+<br>
+
+또 다른 건 로그인을 하면 jwt 쿠키를 주는데, 이 jwt 생성하는 과정에서 algorithm 값이 주어지지 않았다고 한다.
+
+그래서 이 algorithm 값을 none으로 오염시키는 방법도 있는데, 이 부분은 패키지 자체에서 패치가 되어서 이젠 불가능하다고 한다.
+
+정말 의외의 방법이었다.
