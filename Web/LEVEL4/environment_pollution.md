@@ -482,4 +482,4 @@ ChildProcess도 EventEmitter의 객체여서 각 스트림에 이벤트 리스�
 
 <br>
 
-이벤트는 <a href="https://opentutorials.org/module/938/7629" target="_blank">opentutorials.org/module/938/7629</a>와 <a href="https://nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/" target="_blank">nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/</a>
+이벤트는 <a href="https://opentutorials.org/module/938/7629" target="_blank">opentutorials.org/module/938/7629</a>와 <a href="https://nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/" target="_blank">nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/</a>, <a href="https://nodejs.org/api/stream.html" target="_blank">nodejs.org/api/stream.html</a>
