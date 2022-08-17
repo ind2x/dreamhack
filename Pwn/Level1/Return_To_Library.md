@@ -39,6 +39,24 @@ int main() {
 ## Solution
 ---
 
+gdb로 확인해보니 read에서 ```rbp-0x40```부터 입력을 받으므로 입력을 ```(0x40-0x8 = 0x38)```만큼 해주면 카나리릭 코드에서 카나리를 볼 수 있다.
+
+<br>
+
+```shell
+   0x0000000000400772 <+123>:   lea    rax,[rbp-0x40]
+   0x0000000000400776 <+127>:   mov    edx,0x100
+   0x000000000040077b <+132>:   mov    rsi,rax
+   0x000000000040077e <+135>:   mov    edi,0x0
+   0x0000000000400783 <+140>:   call   0x4005f0 <read@plt>
+```
+
+<br>
+
+이제 ovewrite를 해줘야하는데, checksec을 통해 확인해보면 NX가 걸려있고 확인해보면 스택에 실행권한이 없음을 알 수 있다.
+
+<br>
+
 ```shell
 pwndbg> checksec
 [*] '/home/index/rtl/rtl'
@@ -48,6 +66,10 @@ pwndbg> checksec
     NX:       NX enabled
     PIE:      No PIE (0x400000)
 ```
+
+<br>
+
+걸려있는 보호기법은 ASLR, NX가 있다고 생각하면 된다.
 
 <br>
 
@@ -74,20 +96,4 @@ pwndbg> shell cat /proc/3384/maps
 ```
 
 <br>
-
-gdb로 확인해보니 read에서 ```rbp-0x40```부터 입력을 받으므로 입력을 ```(0x40-0x8 = 0x38)```만큼 해주면 카나리릭 코드에서 카나리를 볼 수 있다.
-
-<br>
-
-```shell
-   0x0000000000400772 <+123>:   lea    rax,[rbp-0x40]
-   0x0000000000400776 <+127>:   mov    edx,0x100
-   0x000000000040077b <+132>:   mov    rsi,rax
-   0x000000000040077e <+135>:   mov    edi,0x0
-   0x0000000000400783 <+140>:   call   0x4005f0 <read@plt>
-```
-
-<br>
-
-
 
