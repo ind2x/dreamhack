@@ -74,26 +74,32 @@ pwndbg> checksec
 <br>
 
 ```shell
-pwndbg> shell cat /proc/3384/maps
-00400000-00401000 r-xp 00000000 08:10 844                                /home/index/rtl/rtl
-00600000-00601000 r--p 00000000 08:10 844                                /home/index/rtl/rtl
-00601000-00602000 rw-p 00001000 08:10 844                                /home/index/rtl/rtl
-7ffff7dcb000-7ffff7ded000 r--p 00000000 08:10 27841                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7ffff7ded000-7ffff7f65000 r-xp 00022000 08:10 27841                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7ffff7f65000-7ffff7fb3000 r--p 0019a000 08:10 27841                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7ffff7fb3000-7ffff7fb7000 r--p 001e7000 08:10 27841                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7ffff7fb7000-7ffff7fb9000 rw-p 001eb000 08:10 27841                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7ffff7fb9000-7ffff7fbf000 rw-p 00000000 00:00 0
-7ffff7fca000-7ffff7fce000 r--p 00000000 00:00 0                          [vvar]
-7ffff7fce000-7ffff7fcf000 r-xp 00000000 00:00 0                          [vdso]
-7ffff7fcf000-7ffff7fd0000 r--p 00000000 08:10 27836                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
-7ffff7fd0000-7ffff7ff3000 r-xp 00001000 08:10 27836                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
-7ffff7ff3000-7ffff7ffb000 r--p 00024000 08:10 27836                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
-7ffff7ffc000-7ffff7ffd000 r--p 0002c000 08:10 27836                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
-7ffff7ffd000-7ffff7ffe000 rw-p 0002d000 08:10 27836                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
-7ffff7ffe000-7ffff7fff000 rw-p 00000000 00:00 0
-7ffffffde000-7ffffffff000 rw-p 00000000 00:00 0                          [stack]
+pwndbg> vmmap
+LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
+          0x400000           0x401000 r-xp     1000 0      /home/index/rtl/rtl
+          0x600000           0x601000 r--p     1000 0      /home/index/rtl/rtl
+          0x601000           0x602000 rw-p     1000 1000   /home/index/rtl/rtl
+    0x7ffff7dcb000     0x7ffff7ded000 r--p    22000 0      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+    0x7ffff7ded000     0x7ffff7f65000 r-xp   178000 22000  /usr/lib/x86_64-linux-gnu/libc-2.31.so
+    0x7ffff7f65000     0x7ffff7fb3000 r--p    4e000 19a000 /usr/lib/x86_64-linux-gnu/libc-2.31.so
+    0x7ffff7fb3000     0x7ffff7fb7000 r--p     4000 1e7000 /usr/lib/x86_64-linux-gnu/libc-2.31.so
+    0x7ffff7fb7000     0x7ffff7fb9000 rw-p     2000 1eb000 /usr/lib/x86_64-linux-gnu/libc-2.31.so
+    0x7ffff7fb9000     0x7ffff7fbf000 rw-p     6000 0      [anon_7ffff7fb9]
+    0x7ffff7fca000     0x7ffff7fce000 r--p     4000 0      [vvar]
+    0x7ffff7fce000     0x7ffff7fcf000 r-xp     1000 0      [vdso]
+    0x7ffff7fcf000     0x7ffff7fd0000 r--p     1000 0      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+    0x7ffff7fd0000     0x7ffff7ff3000 r-xp    23000 1000   /usr/lib/x86_64-linux-gnu/ld-2.31.so
+    0x7ffff7ff3000     0x7ffff7ffb000 r--p     8000 24000  /usr/lib/x86_64-linux-gnu/ld-2.31.so
+    0x7ffff7ffc000     0x7ffff7ffd000 r--p     1000 2c000  /usr/lib/x86_64-linux-gnu/ld-2.31.so
+    0x7ffff7ffd000     0x7ffff7ffe000 rw-p     1000 2d000  /usr/lib/x86_64-linux-gnu/ld-2.31.so
+    0x7ffff7ffe000     0x7ffff7fff000 rw-p     1000 0      [anon_7ffff7ffe]
+    0x7ffffffde000     0x7ffffffff000 rw-p    21000 0      [stack]
 ```
 
 <br>
+
+이 부분부터는 강의 내용을 토대로 정리..
+
+ASLR이 걸려있으나, PIE는 걸려있지 않으므로 plt의 주소는 고정이 된다.
+
 
