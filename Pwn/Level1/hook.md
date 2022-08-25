@@ -51,5 +51,16 @@ int main(int argc, char *argv[]) {
 ## Solution
 ---
 
+```
+Ubuntu 16.04
+Arch:     amd64-64-little
+RELRO:    Full RELRO
+Stack:    Canary found
+NX:       NX enabled
+PIE:      No PIE (0x400000)
+```
+
+<br>
+
 
 
