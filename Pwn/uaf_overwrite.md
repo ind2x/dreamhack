@@ -124,7 +124,54 @@ int main() {
 
 <br><br>
 
-## Solution
+## Solution (강의)
 ---
+
+```console
+pwndbg> shell checksec uaf_overwrite
+[*] '/home/index/uaf/uaf_overwrite'
+    Arch:     amd64-64-little
+    RELRO:    Full RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+```
+
+<br>
+
+모든 보호기법이 적용되어 있다.
+
+코드를 보면 강의에서 본 것과 똑같이 구조체 2개의 크기가 같다.
+
+따라서 UAF 취약점이 발생하게 되는데, 문제는 함수 포인터에 시스템 함수를 어떻게 넣는지 이다.
+
+<br>
+
+여기까진 OK
+
+값을 어떻게 넣는지 모르겠어서 강의를 보고 정리.
+
+먼저 라이브러리 주소를 릭을 해야 하는데, 어떻게 주소 값을 leak 할 수 있는지 모르겠다.
+
+왜냐하면 취약점이 UAF 밖에 없기 때문에 강의를 보았는데, unsorted bin 특징을 이용한다고 한다.
+
+<br>
+
+unsorted bin attack --> <a href="https://www.lazenca.net/pages/viewpage.action?pageId=1148135">lazenca.net/pages/viewpage.action?pageId=1148135</a>
+
+<br>
+
+Unsorted bin에 처음 연결되는 청크는 libc의 특정 주소와 이중 원형 연결 리스트를 형성한다.
+
+즉, 처음 unsorted bin에 연결되는 청크의 fd와 bk에는 libc 내부의 주소가 쓰인다.
+
+unsorted bin에 연결된 청크를 재할당하고, fd나 bk의 값을 읽으면 libc가 매핑된 주소를 계산할 수 있다.
+
+<br>
+
+
+
+
+
 
 
