@@ -191,13 +191,13 @@ human과 robot의 구조체가 동일하여 chunk 영역이 같으므로 human�
 
 <br>
 
-솔직히 아직까지 잘 모르겠다.. 풀이와 같이 살펴보았다.
+솔직히 아직까지 잘 모르겠다.. 풀이와 같이 살펴보았다. 풀이가 굉장히 친절하고 좋았음.
 
 풀이 : https://wyv3rn.tistory.com/72
 
 <br>
 
-강의처럼 입력값을 먼저 주고 난 뒤, 힙 영역을 확인해보았다. ( 
+강의처럼 입력값을 먼저 주고 난 뒤, 힙 영역을 확인해보았다. (1280, AAAA, -1)
 
 <br>
 
@@ -207,11 +207,93 @@ human과 robot의 구조체가 동일하여 chunk 영역이 같으므로 human�
 
 2번째 부분이 내가 입력한 값이 있는 chunk 영역이다.
 
+이 부분이 ```custom[0]```이다.
+
 <br>
 
 ![image](https://user-images.githubusercontent.com/52172169/187615663-30948f64-3209-421e-8b9c-881ca4107738.png)
 
 <br>
+
+다시 입력을 해주었다. (1280, AAAA, 0)
+
+이렇게 입력을 해주면 내가 처음 할당해준 영역(```custom[0]```)이 free가 되는데, top chunk가 아니므로 unsorted bin에 연결이 된다.
+
+따라서 나중에 재할당 될 때, 여기에 bk와 fd 값에 libc의 내부 주소가 저장된다.
+
+이 값을 읽어줘야 한다.
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/187616375-6e3c77c1-799b-4622-94cf-1a509b8ae53f.png)
+
+<br>
+
+확인해보면 먼저 top chunk 값이 할당된 size인 0x511만큼 올랐고, 첫 번째 chunk 주소에서 0x511을 더해주면 두 번째 영역의 chunk 주소 -1 값이 나온다.
+
+여기에도 역시 내가 입력한 AAAA 값이 저장되어 있다.
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/187616657-0b1cfb4a-d1eb-4e76-9f47-b4f928ee6085.png)
+
+<br>
+
+그래서 malloc을 한 직 후 브레이크 포인트를 걸어주면 아래와 같이 볼 수 있다.
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/187626347-e2e40789-e4a3-4284-bb49-899400ed85f3.png)
+
+<br>
+
+fd와 bk 값에 libc의 주소가 저장되었고, 이제 여기다 입력값을 B를 넣어주면 어떻게 되는지 확인해본다.
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/187626668-f6aa248b-bcbb-4995-837d-3ee70878df7b.png)
+
+<br>
+
+fd나 bk 둘 중에 내 입력값인 B가 끝부분에 덮어졌다.
+
+이 값이 출력이 되는 것이다.
+
+근데 강의와는 다르게 이 주소 값을 바로 알아낼 수 있는데, 2개의 chunk를 만든 뒤, 첫 번째 chunk를 free 하면 unsorted bin에 들어갈 것이다.
+
+다시 malloc으로 재할당 해주면 libc 주소가 저장되는데, 입력값을 7바이트를 준다면?
+
+AAAAAAA\n이 되어 libc의 주소가 덮어씌어지는 동시에 널바이트 만나기 전까지 옆에 있던 libc의 주소까지 출력하고 널 바이트를 만나 출력이 멈춘다.
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/187634023-4fe1e626-1e76-4ea6-80a5-cea994362134.png)
+
+<br>
+
+위의 상태에서 AAAAAAA를 입력해주면 아래와 같이 변한다.
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/187634145-64816379-094a-4d1f-b23b-8590e73ee157.png)
+
+<br>
+
+![image](https://user-images.githubusercontent.com/52172169/187634230-65aed219-efc3-4eb5-92e7-eb90356975f0.png)
+
+<br>
+
+pwntools로 확인해보면 주소가 나올 것이다.
+
+<br>
+
+```python
+
+```
+
+<br>
+
+
 
 
 
