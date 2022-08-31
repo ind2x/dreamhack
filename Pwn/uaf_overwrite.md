@@ -169,9 +169,27 @@ unsorted bin에 연결된 청크를 재할당하고, fd나 bk의 값을 읽으�
 
 <br>
 
+malloc으로 할당받으면 tcache와 bin에 비슷한 크기의 chunk가 있는지 확인한다.
 
+여기서 tcache는 0x410 이상의 chunk에 대해서는 관리하지 않고, 이하의 chunk에 대해서만 tcache에 삽입된다.
 
+따라서 custom_func에서 malloc의 크기값을 0x410보다 크게 준다면, 해제를 했을 때 top chunk가 아니라면 unsorted bins에 연결될 것이다.
 
+<br>
+
+여기서 해제할 청크가 top chunk와 맞닿게 되면 병합이 된다고 한다.
+
+그래서 청크 2개를 할당해준 뒤,  처음 할당한 청크를 해제해주면 top chunk가 해제가 된다.
+
+<br>
+
+libc를 leak하게 된다면 이제 Robot->fptr에 one gadget을 덮어씌우면 된다.
+
+human과 robot의 구조체가 동일하여 chunk 영역이 같으므로 human의 age 값과 robot의 fptr 부분이 같다.
+
+따라서 age에 onegadget을 넣어준다면 fptr 함수 포인터를 호출할 때 셸이 흭득될 것이다.
+
+<br>
 
 
 
