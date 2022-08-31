@@ -328,6 +328,14 @@ print(p.recvline())
 
 <br>
 
+따라서 libc의 베이스 주소는 leak한 주소에서 main_arena와의 offset이 몇인지 구하고, main_arena와 libc와의 오프셋을 구하면 다음과 같은 식이 성립한다.
+
+main_arena와 libc와의 오프셋 값은 main_arena가 ```__malloc_hook + 0x10```에 위치한다고 하므로 이를 이용해서 구하면 된다.
+
+```libc_base = leak - (libc.symbols['__malloc_hook'] + 0x10) - main_arena_offset```
+
+<br>
+
 ```python
 from pwn import *
 
