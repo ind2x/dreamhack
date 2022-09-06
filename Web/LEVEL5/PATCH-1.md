@@ -137,4 +137,144 @@ def memoUpdate(idx):
 ## Solution
 ---
 
+먼저 발견한 취약점은 sql injection 취약점이다.
+
+```ret = query_db(f"SELECT * FROM users where userid='{userid}' and password='{hashlib.sha256(password.encode()).hexdigest()}'" , one=True)```
+
+<br>
+
+보자마자 느낌이 오는 코드로, 밑에 있는 insert 문처럼 바꿔주면 된다.
+
+```ret = query_db("SELECT * FROM users where userid=? and password=?" , (userid,hashlib.sha256(password.encode()).hexdigest()), one=True)```
+
+이렇게 먼저 제출을 해보면 아래와 같이 다른 취약점이 나온다.
+
+<br>
+
+```
+[FAIL]
+
+ - SLA(7/7): SLA PASS
+ - VULN(5)
+   - Hard-coded Key
+   - SQL Injection
+   - Server-Side Template Injection
+   - Cross Site Scripting
+   - Memo Update IDOR
+```
+
+<br>
+
+취약점이 5개가 있고 내가 패치한 건 sql injection 부문 하나다.
+
+하드코드 키는 app.secret_key를 얘기하는 것이고, SSTI 취약점은 memoView 함수에서 발생한다.
+
+먼저 이 둘을 처리해본다.
+
+<br><br>
+
+### Hard-coded Key
+---
+
+hard coded key는 <a href="https://flask.palletsprojects.com/en/2.1.x/config/#SECRET_KEY">flask.palletsprojects.com/en/2.1.x/config/#SECRET_KEY</a>를 보면 된다.
+
+따라서 ```import secrets```를 추가하고 ```app.secret_key = secrets.token_hex()```로 변경해준다.
+
+<br>
+
+```python
+import secrets
+
+app.secret_key = secrets.token_hex()
+```
+
+<br>
+
+제출 결과 한 개의 취약점만 줄었는데, 맨 처음 패치한 것이 잘못된 듯 하다..
+
+<br>
+
+```
+[FAIL]
+
+ - SLA(7/7): SLA PASS
+ - VULN(4)
+   - SQL Injection
+   - Server-Side Template Injection
+   - Cross Site Scripting
+   - Memo Update IDOR
+```
+
+<br><br>
+
+### SQL Injection
+---
+
+sql injection 부분이 다른 곳에도 남아있었는데, memoView 부분에서 발생한다.
+
+원래 idx 같은 값들은 앞에 int라고 명시를 해줘야하는데, 명시해주지 않아서 발생하는 것으로 생각된다.
+
+따라서 ```ret = query_db("SELECT * FROM memo where idx=" + idx)[0]```를 ```ret = query_db("SELECT * FROM memo where idx=?", idx)[0]```로 패치해주면 된다.
+
+<br>
+
+```
+[FAIL]
+
+ - SLA(7/7): SLA PASS
+ - VULN(3)
+   - Server-Side Template Injection
+   - Cross Site Scripting
+   - Memo Update IDOR
+```
+
+<br><br>
+
+### SSTI
+---
+
+ssti는 아래 코드에서 발생한다.
+
+<br>
+
+```python
+if mode == 'html':
+      template = ''' Written by {userid}<h3>{title}</h3>
+      <pre>{contents}</pre>
+      '''.format(title=title, userid=userid, contents=contents)
+      return render_template_string(template)
+```
+
+<br>
+
+이 코드를 아래와 같이 패치해주면 된다.
+
+<br>
+
+```python
+ if mode == 'html':
+      template = '''Written by {{userid}}<h3>{{title}}</h3>
+      <pre>{{contents}}</pre>
+      '''
+      return render_template_string(template, title=title, userid=userid, contents=contents)
+```
+
+<br>
+
+```
+[FAIL]
+
+ - SLA(7/7): SLA PASS
+ - VULN(1)
+   - Memo Update IDOR
+```
+
+<br><br>
+
+### Memo Update IDOR
+---
+
+남은 건 이 취약점 밖에 없다.
+
+먼저 IDOR 취약점이 먼저 알아본다.
 
