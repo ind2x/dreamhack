@@ -278,3 +278,18 @@ if mode == 'html':
 
 먼저 IDOR 취약점이 먼저 알아본다.
 
+IDOR(Insecure Direct Object References)는 Access Control에서 발생하는 취약점 중 외부에 노출되거나 제공되는 입력이 Object에 직접 참고하고 엑세스할 때 이를 이용하여 본인의 권한을 넘어서는 액션을 수행할 수 있게 해준다고 한다.
+
+출처 및 자세한 내용은 <a href="https://www.hahwul.com/cullinan/idor/">hahwul.com/cullinan/idor/</a>
+
+<br>
+
+대놓게 Memo Update IDOR이라 해줬으므로 해당 코드를 살펴보면 메모의 내용을 변경해주는 UPDATE문이 있는데, 이 과정에서 해당 유저의 메모가 아닌 다른 사람의 메모도 변경할 수 있는 것을 알 수 있다.
+
+따라서 다음과 같이 끝부분에 userid를 검증하는 과정을 추가해준다. 
+
+```updateRet = cur.execute("UPDATE memo SET title=?, contents=? WHERE idx=? and userid=?",(title, contents, idx, userid))```
+
+<br><br>
+
+이로써 모든 취약점을 패치하였고, 플래그를 흭득할 수 있다.
