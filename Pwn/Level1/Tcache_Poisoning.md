@@ -53,6 +53,42 @@ int main() {
 
 <br><br>
 
-## Solution
+## Solution (드림핵 강의)
 ---
+
+```shell
+[*] '/home/index/tcache_poisoning/tcache_poison'
+    Arch:     amd64-64-little
+    RELRO:    Full RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x400000)
+```
+
+<br>
+
+익스플로잇 순서는 다음과 같다.
+
+1. Tcache Poisoning
+
+2. libc leak
+
+3. hook overwrite + one_gadget
+
+<br>
+
+먼저 tcache_poison으로 key를 조작하여 tcache duplication으로 DFB를 해준다.
+
+<br>
+
+```python
+
+```
+
+<br>
+
+
+
+
+
 
